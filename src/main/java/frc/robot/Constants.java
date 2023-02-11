@@ -135,21 +135,31 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-// These constantss are not correct, temporary until parts added.
+// These constants are not correct, temporary until parts added.
   
   public static final class ArmTiltConstants {
+    // These are port values (where it's located on the robot)
     public static final int kTiltMotorPort = 11;
+    public static final int kTiltEncoderPort = 9;  
+    public static final int kClawTiltMotorPort = 10;
+    // These are speed values
     public static final double kTiltReverseSpeed = -0.6;
     public static final double kTiltForwardSpeed = 0.6;
     public static final double kTiltStowSpeed = -0.3;
     public static final double kSecondTierSpeed = 0.3;
-    public static final int kTiltEncoderPort = 9;  
-    public static final int kClawTiltMotorPort = 10;
     public static final double kClawTiltReverseSpeed = -0.6;
     public static final double kClawTiltForwardSpeed = 0.6;
     public static final double kClawTiltStowSpeed = -0.3;
     public static final double kClawSecondTierSpeed = 0.3;
-
+    /* These encoder values state the threshholds for different arm heights.
+    The idea is that the arm stops at each height depending on the desired
+    height determined by controller input.*/
+    // These encoder threshholds do not have correct values, are only examples
+    public static final double kEncoderMinThreshold = 50;
+    public static final double kEncoderFloorThreshold = 700;
+    public static final double kEncoderLowerThreshold = 1500;
+    public static final double kEncoderUpperThreshold = 2200;
+    public static final double kEncoderMaxThreshold = 2900;
   }
 
 }
