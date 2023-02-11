@@ -134,4 +134,22 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+// These constantss are not correct, temporary until parts added.
+  
+  public static final class ArmTiltConstants {
+    public static final int kTiltMotorPort = 9;
+    public static final double kTiltReverseSpeed = -0.6;
+    public static final double kTiltForwardSpeed = 0.6;
+    public static final double kTiltStowSpeed = -0.3;
+    public static final double kSecondTierSpeed = 0.3;
+  }
+
+  public static final class ClawTiltConstants {
+    public static final int kClawTiltMotorPort = 10;
+    public static final double kTiltReverseSpeed = -0.6;
+    public static final double kTiltForwardSpeed = 0.6;
+    public static final double kTiltStowSpeed = -0.3;
+    public static final double kSecondTierSpeed = 0.3;
+  }
 }
