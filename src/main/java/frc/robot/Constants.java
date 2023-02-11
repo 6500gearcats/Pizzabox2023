@@ -138,18 +138,18 @@ public final class Constants {
 // These constantss are not correct, temporary until parts added.
   
   public static final class ArmTiltConstants {
-    public static final int kTiltMotorPort = 9;
+    public static final int kTiltMotorPort = 11;
     public static final double kTiltReverseSpeed = -0.6;
     public static final double kTiltForwardSpeed = 0.6;
     public static final double kTiltStowSpeed = -0.3;
     public static final double kSecondTierSpeed = 0.3;
+    public static final int kTiltEncoderPort = 9;  
+    public static final int kClawTiltMotorPort = 10;
+    public static final double kClawTiltReverseSpeed = -0.6;
+    public static final double kClawTiltForwardSpeed = 0.6;
+    public static final double kClawTiltStowSpeed = -0.3;
+    public static final double kClawSecondTierSpeed = 0.3;
+
   }
 
-  public static final class ClawTiltConstants {
-    public static final int kClawTiltMotorPort = 10;
-    public static final double kTiltReverseSpeed = -0.6;
-    public static final double kTiltForwardSpeed = 0.6;
-    public static final double kTiltStowSpeed = -0.3;
-    public static final double kSecondTierSpeed = 0.3;
-  }
 }
