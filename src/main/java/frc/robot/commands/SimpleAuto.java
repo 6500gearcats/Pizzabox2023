@@ -21,27 +21,34 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class CircleRotation extends CommandBase {
+public class SimpleAuto extends CommandBase {
   private final DriveSubsystem m_robotDrive;
 
-public CircleRotation(DriveSubsystem robotDrive){
+public SimpleAuto(DriveSubsystem robotDrive){
   m_robotDrive = robotDrive;
 }
-public Command getCircleRotation(){
+public Command getAutoCommand(){
   TrajectoryConfig config = new TrajectoryConfig(
     AutoConstants.kMaxSpeedMetersPerSecond,
     AutoConstants.kMaxAccelerationMetersPerSecondSquared)
     // Add kinematics to ensure max speed is actually obeyed
     .setKinematics(DriveConstants.kDriveKinematics);
 
-// An example trajectory to follow. All units in meters.
-  Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+// Trajectory from start to the grid
+  Trajectory toGrid = TrajectoryGenerator.generateTrajectory(
     // Start at the origin facing the +X direction
     new Pose2d(0, 0, new Rotation2d(0)),
-    // Pass through these two interior waypoints, making an 's' curve path
-    List.of(new Translation2d(1, 1), new Translation2d(-1, 1)),
-    // End 3 meters straight ahead of where we started, facing forward
-    new Pose2d(-1, -1, new Rotation2d(0)),
+    null, 
+    // End .85 meters straight ahead of where we started, facing forward
+    new Pose2d(0, 0.85, new Rotation2d(0)),
+    config);
+
+  Trajectory exitCommunity = TrajectoryGenerator.generateTrajectory(
+    // Start at the origin facing the +X direction
+    new Pose2d(0, 0.85, new Rotation2d(0)),
+    null,
+    // End 5.15 meters behind the 2nd position, facing forward
+    new Pose2d(0, -5.15, new Rotation2d(0)),
     config);
 
 ProfiledPIDController thetaController = new ProfiledPIDController(
@@ -49,10 +56,9 @@ ProfiledPIDController thetaController = new ProfiledPIDController(
 thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
 SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-    exampleTrajectory,
+    toGrid,
     m_robotDrive::getPose, // Functional interface to feed supplier
     DriveConstants.kDriveKinematics,
-
     // Position controllers
     new PIDController(AutoConstants.kPXController, 0, 0),
     new PIDController(AutoConstants.kPYController, 0, 0),
@@ -61,7 +67,7 @@ SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
     m_robotDrive);
 
 // Reset odometry to the starting pose of the trajectory.
-m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+m_robotDrive.resetOdometry(toGrid.getInitialPose());
 
 // Run path following command, then stop at the end.
 return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
