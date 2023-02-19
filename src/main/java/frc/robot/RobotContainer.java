@@ -116,7 +116,7 @@ public Command getAutonomousCommand2() {
         new Pose2d(-1, -1, new Rotation2d(0)),
         config);
 
-    var thetaController = new ProfiledPIDController(
+        var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
