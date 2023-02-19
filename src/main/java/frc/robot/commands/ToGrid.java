@@ -40,7 +40,7 @@ public Command getToGrid(){
     new Pose2d(0, 0, new Rotation2d(0)),
     null, 
     // End .85 meters straight ahead of where we started, facing forward
-    new Pose2d(0, 0.85, new Rotation2d(0)),
+    new Pose2d(0, AutoConstants.toGridEnd, new Rotation2d(0)),
     config);
 
 

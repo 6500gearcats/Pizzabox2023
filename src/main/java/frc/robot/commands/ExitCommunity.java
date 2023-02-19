@@ -37,10 +37,10 @@ public Command getExitCommunity(){
 // Trajectory from grid to outside community area
     Trajectory exitCommunity = TrajectoryGenerator.generateTrajectory(
     // Start at the origin facing the +X direction
-    new Pose2d(0, 0.85, new Rotation2d(0)),
+    new Pose2d(0, 0, new Rotation2d(0)),
     null,
     // End 5.15 meters behind the 2nd position, facing forward
-    new Pose2d(0, -5.15, new Rotation2d(0)),
+    new Pose2d(0, AutoConstants.exitCommunityEnd, new Rotation2d(0)),
     config);
 
 ProfiledPIDController thetaController = new ProfiledPIDController(

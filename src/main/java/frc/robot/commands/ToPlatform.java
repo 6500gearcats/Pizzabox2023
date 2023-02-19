@@ -37,10 +37,10 @@ public Command getToPlatform(){
 // Trajectory from outside community area to platform
   Trajectory toPlatform = TrajectoryGenerator.generateTrajectory(
     // Start at the origin facing the +X direction
-    new Pose2d(0, -5.15, new Rotation2d(0)),
+    new Pose2d(0, 0, new Rotation2d(0)),
     null, 
     // End 4.3 meters behind where we started, facing forward
-    new Pose2d(0, -4.3, new Rotation2d(0)),
+    new Pose2d(0, AutoConstants.toPlatformEnd, new Rotation2d(0)),
     config);
 
 
