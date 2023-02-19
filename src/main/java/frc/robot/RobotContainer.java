@@ -97,7 +97,7 @@ public class RobotContainer {
         new Pose2d(3, 0, new Rotation2d(0)),
         config);
 
-    var thetaController = new ProfiledPIDController(
+        var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
