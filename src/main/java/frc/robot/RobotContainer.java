@@ -18,11 +18,17 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.TiltArmDown;
+import frc.robot.commands.TiltArmUp;
+import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import java.util.List;
 
 /*
@@ -34,9 +40,12 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Arm m_robotArm = new Arm();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  // The gunner's controller
+  XboxController m_gunnerController = new XboxController(OIConstants.kGunnerControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -73,7 +82,7 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
   }
-
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -113,10 +122,16 @@ public class RobotContainer {
         m_robotDrive::setModuleStates,
         m_robotDrive);
 
+        new Trigger(() -> (m_gunnerController.getLeftTriggerAxis() > 0.5))
+      .whileTrue(new TiltArmUp(m_robotArm));
+        new Trigger(() -> (m_gunnerController.getLeftTriggerAxis() > 0.5))
+      .whileTrue(new TiltArmDown(m_robotArm));
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+
+    
   }
 }
