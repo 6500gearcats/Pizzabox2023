@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmUp;
 import frc.robot.commands.FloorPosition;
 import frc.robot.commands.StowPosition;
 import frc.robot.subsystems.Arm;
@@ -80,8 +81,10 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
-    new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
+    //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
+    //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(new ArmUp(m_Arm));
   }
 
   /**
