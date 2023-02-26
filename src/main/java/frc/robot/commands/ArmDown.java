@@ -16,4 +16,8 @@ public class ArmDown extends CommandBase{
         m_ArmSystem.armDown();
     }
 
+    public void end(boolean done) {
+        m_ArmSystem.stopArm();
+    }
+
 }

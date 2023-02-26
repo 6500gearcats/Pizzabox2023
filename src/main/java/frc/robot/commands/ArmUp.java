@@ -9,11 +9,17 @@ public class ArmUp extends CommandBase{
 
     public ArmUp(Arm theArm) {
         m_ArmSystem = theArm;
+        addRequirements(m_ArmSystem);
     }
 
     @Override
     public void execute() {
         m_ArmSystem.armUp();
+    }
+
+    @Override
+    public void end(boolean done) {
+        m_ArmSystem.stopArm();
     }
 
 }

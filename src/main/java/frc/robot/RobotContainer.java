@@ -83,8 +83,8 @@ public class RobotContainer {
             m_robotDrive));
     //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
     //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(new ArmUp(m_Arm));
-    new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_driverController, Button.kB.value).onTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ArmUp(m_Arm));
   }
 
   /**

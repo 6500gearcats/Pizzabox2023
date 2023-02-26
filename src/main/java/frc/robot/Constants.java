@@ -141,12 +141,11 @@ public final class Constants {
   
   public static final class ArmConstants {
     // These are port values (where it's located on the robot)
-    public static final int kTiltMotorPort = 11;
-    public static final int kTiltEncoderPort = 9;  
-    public static final int kClawTiltMotorPort = 10;
+    public static final int kTiltMotorPort = 10;  
+    public static final int kClawTiltMotorPort = 9;
     // These are speed values
-    public static final double kTiltReverseSpeed = -0.1;
-    public static final double kTiltForwardSpeed = 0.1;
+    public static final double kTiltReverseSpeed = -0.4;
+    public static final double kTiltForwardSpeed = 0.4;
     public static final double kTiltStowSpeed = -0.3;
     public static final double kSecondTierSpeed = 0.3;
     public static final double kClawTiltReverseSpeed = -0.6;
