@@ -36,7 +36,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final Field2d m_field = new Field2d();
+ 
 
 
 
@@ -51,7 +51,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    SmartDashboard.putData("Field", m_field);
+    
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
