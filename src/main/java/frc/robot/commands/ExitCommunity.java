@@ -26,7 +26,14 @@ public class ExitCommunity extends CommandBase {
 
 public ExitCommunity(DriveSubsystem robotDrive){
   m_robotDrive = robotDrive;
+  addRequirements(m_robotDrive);
 }
+
+public void execute()
+{
+  getExitCommunity();
+}
+
 public Command getExitCommunity(){
   TrajectoryConfig config = new TrajectoryConfig(
     AutoConstants.kMaxSpeedMetersPerSecond,
@@ -35,13 +42,15 @@ public Command getExitCommunity(){
     .setKinematics(DriveConstants.kDriveKinematics);
 
 // Trajectory from grid to outside community area
-    Trajectory exitCommunity = TrajectoryGenerator.generateTrajectory(
-    // Start at the origin facing the +X direction
-    new Pose2d(0, 0, new Rotation2d(0)),
-    null,
-    // End 5.15 meters behind the 2nd position, facing forward
-    new Pose2d(0, AutoConstants.exitCommunityEnd, new Rotation2d(0)),
-    config);
+Trajectory exitCommunity = TrajectoryGenerator.generateTrajectory(
+  // Start at the origin facing the +X direction
+  new Pose2d(0, 0, new Rotation2d(0)),
+  // Pass through these two interior waypoints, making an 's' curve path
+  List.of(new Translation2d(0, 1)),
+  // End 3 meters straight ahead of where we started, facing forward
+  new Pose2d(0, AutoConstants.exitCommunityEnd, new Rotation2d(0)),
+  config);
+    ///new Pose2d(0, AutoConstants.exitCommunityEnd, new Rotation2d(0)),
 
 ProfiledPIDController thetaController = new ProfiledPIDController(
     AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);

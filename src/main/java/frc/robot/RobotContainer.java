@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SimpleAuto;
+import frc.robot.commands.ToGrid;
+import frc.robot.commands.ToPlatform;
 
 import java.util.List;
 
