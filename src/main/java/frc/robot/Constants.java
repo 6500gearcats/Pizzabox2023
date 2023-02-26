@@ -145,8 +145,8 @@ public final class Constants {
     public static final int kTiltEncoderPort = 9;  
     public static final int kClawTiltMotorPort = 10;
     // These are speed values
-    public static final double kTiltReverseSpeed = -0.6;
-    public static final double kTiltForwardSpeed = 0.6;
+    public static final double kTiltReverseSpeed = -0.1;
+    public static final double kTiltForwardSpeed = 0.1;
     public static final double kTiltStowSpeed = -0.3;
     public static final double kSecondTierSpeed = 0.3;
     public static final double kClawTiltReverseSpeed = -0.6;
