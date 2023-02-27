@@ -19,6 +19,8 @@ public class Arm extends SubsystemBase {
     private final MotorController m_clawTilterMotor = new CANSparkMax(ArmTiltConstants.kClawTiltMotorPort, MotorType.kBrushed);
 
     // Sets upper and lower limit
+    /* There is some problem with the DutyCycleEncoder definition. It works
+    fine in the code, but returns null when tested. */
     private DutyCycleEncoder m_tiltArmEncoder;
 
     // Sets lower limit
@@ -33,10 +35,12 @@ public class Arm extends SubsystemBase {
     public void periodic() {
       // This method will be called once per scheduler run
 
+      double ClawAngle = m_tiltArmEncoder.getAbsolutePosition();
       double ArmPosition = m_tiltArmEncoder.getAbsolutePosition();
       boolean lowerLimit = m_lowerLimitSwitch.isPressed();
       
       SmartDashboard.putNumber("Arm position", ArmPosition);
+      SmartDashboard.putNumber("Claw position", ClawAngle);
     }
   
     @Override
@@ -79,7 +83,13 @@ public class Arm extends SubsystemBase {
       return mbArmAtAngle;
     }
 
-    // NOTICE!!! The following three methods may not be needed.
+    public boolean CheckClawAngle() {
+      double ClawAngle = m_tiltArmEncoder.getAbsolutePosition();
+      boolean mbClawAtAngle = ClawAngle > ArmTiltConstants.kEncoderUpperThreshold;
+      return mbClawAtAngle;
+    }
+
+    // NOTICE!!! The following methods may not be needed.
 
     public void stowArm() {
         //Slowly reverse the tilt of the arm after arm nears robot.
@@ -88,11 +98,16 @@ public class Arm extends SubsystemBase {
 
     public void angleClawDownSlow() {
       //Slowly do angleClawDown
-    m_tilterMotor.set(ArmTiltConstants.kTiltStowSpeed);
+    m_clawTilterMotor.set(ArmTiltConstants.kTiltStowSpeed);
   }
     public void setSecondTierSpeed() {
         // Tilt the arm slowly to deposit objects on the second teir.
       m_tilterMotor.set(ArmTiltConstants.kSecondTierSpeed);
+    }
+
+    public void angleClawUpSlow(){
+      //Slowly do angleClawUp
+    m_clawTilterMotor.set(ArmTiltConstants.kClawSecondTierSpeed);
     }
 
     public void stopArm() {
