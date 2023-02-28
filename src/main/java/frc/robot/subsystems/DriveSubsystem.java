@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -43,7 +45,16 @@ public class DriveSubsystem extends SubsystemBase {
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
+  SwerveDriveOdometry m_odometry;
+
+  private final Field2d m_field = new Field2d();
+
+  private Pose2d m_simOdometryPose;
+
+  /** Creates a new DriveSubsystem. */
+  public DriveSubsystem() {
+
+    m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(m_gyro.getAngle()),
       new SwerveModulePosition[] {
@@ -51,27 +62,19 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      }, new Pose2d(2.0, 2.0, new Rotation2d()));
+      }, new Pose2d(2.0, 5.0, new Rotation2d()));
 
-  private final Field2d m_field = new Field2d();
-
-  /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+    m_simOdometryPose = m_odometry.getPoseMeters();
     SmartDashboard.putData("Field", m_field);
   }
 
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        });
-        m_field.setRobotPose(m_odometry.getPoseMeters());
+    updateOdometry();
+
+    m_field.setRobotPose(m_simOdometryPose);
+
   }
 
   /**
@@ -80,7 +83,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    if (Robot.isReal()) {
+      return m_odometry.getPoseMeters();
+    } else {
+      return m_simOdometryPose;
+    }
   }
 
   /**
@@ -99,6 +106,37 @@ public class DriveSubsystem extends SubsystemBase {
         },
         pose);
   }
+
+  /**
+   * Updates the odometry of the robot using the swerve module states and the gyro reading. Should
+   * be run in periodic() or during every code loop to maintain accuracy.
+   */
+  public void updateOdometry() {
+    m_odometry.update(
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+        });
+
+
+    if (Robot.isSimulation()) {
+      SwerveModuleState[] measuredStates =
+          new SwerveModuleState[] {
+            m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
+          };
+      ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
+      m_simOdometryPose =
+          m_simOdometryPose.exp(
+              new Twist2d(
+                  speeds.vxMetersPerSecond * .02,
+                  speeds.vyMetersPerSecond * .02,
+                  speeds.omegaRadiansPerSecond * .02));
+    }
+  }
+
 
   /**
    * Method to drive the robot using joystick info.
