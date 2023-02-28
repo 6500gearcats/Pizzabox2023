@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ClawConstants;
 
 public class Claw extends SubsystemBase{
     
-    private final MotorController m_clawTiltMotor = new CANSparkMax(ArmConstants.kClawTiltMotorPort, MotorType.kBrushed);
+    private final MotorController m_clawTiltMotor = new CANSparkMax(ClawConstants.kClawMotorPort, MotorType.kBrushless);
     private final DoubleSolenoid m_clawMotor = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
     private final DutyCycleEncoder m_clawTiltEncoder = new DutyCycleEncoder(1);
     private double ClawPosition;
@@ -46,11 +46,11 @@ public class Claw extends SubsystemBase{
 
     //Control Tilt of the Claw, sets a speed not sure how to know when to stop, but we figure that out later
     public void clawUp() {
-        m_clawTiltMotor.set(ArmConstants.kClawTiltForwardSpeed);
+        m_clawTiltMotor.set(ClawConstants.kClawForwardSpeed);
     }
 
     public void clawDown() {
-        m_clawTiltMotor.set(ArmConstants.kClawTiltReverseSpeed);
+        m_clawTiltMotor.set(ClawConstants.kClawReverseSpeed);
     }
 
     public void stopClawTilt() {

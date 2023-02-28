@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ClawConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
@@ -17,19 +18,19 @@ public class FloorPosition extends CommandBase {
 
     @Override
     public void initialize() {
-        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() > ArmConstants.kClawFloorAngle) {
+        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawFloorAngle) {
             m_ArmSystem.armDown();
             m_ClawSystem.clawDown();
         }
-        else if(m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() < ArmConstants.kClawFloorAngle){
+        else if(m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() < ClawConstants.kClawFloorAngle){
             m_ArmSystem.armDown();
             m_ClawSystem.clawUp();
         }
-        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() > ArmConstants.kClawFloorAngle) {
+        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawFloorAngle) {
             m_ArmSystem.armUp();
             m_ClawSystem.clawDown();
         }
-        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() < ArmConstants.kClawFloorAngle) {
+        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() < ClawConstants.kClawFloorAngle) {
             m_ArmSystem.armUp();
             m_ClawSystem.clawUp();
         }
@@ -37,7 +38,7 @@ public class FloorPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() == ArmConstants.kClawFloorAngle) {
+        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() == ClawConstants.kClawFloorAngle) {
             return true;
         }
         else {

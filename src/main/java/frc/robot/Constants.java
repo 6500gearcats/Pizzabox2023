@@ -141,17 +141,12 @@ public final class Constants {
   
   public static final class ArmConstants {
     // These are port values (where it's located on the robot)
-    public static final int kTiltMotorPort = 10;  
-    public static final int kClawTiltMotorPort = 9;
+    public static final int kArmMotorPort = 10;  
     // These are speed values
-    public static final double kTiltReverseSpeed = -0.4;
-    public static final double kTiltForwardSpeed = 0.4;
-    public static final double kTiltStowSpeed = -0.3;
+    public static final double kArmReverseSpeed = -0.4;
+    public static final double kArmForwardSpeed = 0.4;
+    public static final double kArmStowSpeed = -0.3;
     public static final double kSecondTierSpeed = 0.3;
-    public static final double kClawTiltReverseSpeed = -0.6;
-    public static final double kClawTiltForwardSpeed = 0.6;
-    public static final double kClawTiltStowSpeed = -0.3;
-    public static final double kClawSecondTierSpeed = 0.3;
     /* These encoder values state the threshholds for different arm heights.
     The idea is that the arm stops at each height depending on the desired
     height determined by controller input.*/
@@ -161,13 +156,19 @@ public final class Constants {
     public static final double kEncoderLowerThreshold = 1500;
     public static final double kEncoderUpperThreshold = 2200;
     public static final double kEncoderMaxThreshold = 2900;
-    //claw stuff
+    public static final double kArmStowAngle = 500;
+    public static final double kArmFloorAngle = 1000;
+  }
+
+  public static final class ClawConstants {
+    public static final int kClawMotorPort = 9;
+    public static final double kClawReverseSpeed = -0.6;
+    public static final double kClawForwardSpeed = 0.6;
+    public static final double kClawStowSpeed = -0.3;
+    public static final double kClawSecondTierSpeed = 0.3;
     public static final int kOpen = 0;
     public static final int kClose = 0;
-
-    public static final double kArmStowAngle = 500;
     public static final double kClawStowAngle = 100;
-    public static final double kArmFloorAngle = 1000;
     public static final double kClawFloorAngle = 200;
   }
 
