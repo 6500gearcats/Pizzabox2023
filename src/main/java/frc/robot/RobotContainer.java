@@ -102,12 +102,12 @@ public class RobotContainer {
 
     // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-        DriveSubsystem::getPose, // Pose2d supplier
-        DriveSubsystem::resetPose, // Pose2d consumer, used to reset odometry at the beginning of auto
-        DriveSubsystem.kinematics, // SwerveDriveKinematics
+        m_robotDrive::getPose, // Pose2d supplier
+        m_robotDrive::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+        DriveConstants.kDriveKinematics,
         new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
         new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
-        DriveSubsystem::setModuleStates,// Module states consumer used to output to the drive subsystem
+        m_robotDrive::setModuleStates,// Module states consumer used to output to the drive subsystem
         eventMap,
         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
         m_robotDrive // The drive subsystem. Used to properly set the requirements of path following commands
