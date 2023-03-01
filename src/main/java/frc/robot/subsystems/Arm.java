@@ -40,8 +40,8 @@ public class Arm extends SubsystemBase {
       if (RobotBase.isSimulation()) {
         REVPhysicsSim.getInstance().addSparkMax(m_CanSparkMaxArm, DCMotor.getNEO(1));
       }
-        
-
+      
+      //m_tiltArmEncoder.reset();
 
     }
 
@@ -49,10 +49,10 @@ public class Arm extends SubsystemBase {
     public void periodic() {
       // This method will be called once per scheduler run
 
-        //ArmPosition = m_tiltArmEncoder.getAbsolutePosition();
+        ArmPosition = m_tiltArmEncoder.getAbsolutePosition();
         //lowerLimit = m_lowerLimitSwitch.get();
       
-      //SmartDashboard.putNumber("Arm position", ArmPosition);
+        SmartDashboard.putNumber("Arm Enocder:", ArmPosition);
     }
 
 

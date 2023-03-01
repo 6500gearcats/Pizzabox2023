@@ -18,8 +18,14 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmDown;
 import frc.robot.commands.ArmUp;
+import frc.robot.commands.ClawDown;
+import frc.robot.commands.ClawUp;
+import frc.robot.commands.CloseClaw;
 import frc.robot.commands.FloorPosition;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.ScoreHighPosition;
 import frc.robot.commands.StowPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
@@ -83,8 +89,13 @@ public class RobotContainer {
             m_robotDrive));
     //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
     //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
-    new JoystickButton(m_driverController, Button.kB.value).whileTrue(new ArmUp(m_Arm));
-    new JoystickButton(m_driverController, Button.kA.value).whileTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_driverController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_driverController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
+    new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
+    new JoystickButton(m_driverController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
+    new JoystickButton(m_driverController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
+    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
   }
 
   /**
