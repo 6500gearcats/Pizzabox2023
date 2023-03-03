@@ -69,9 +69,9 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getRightX(), 0.06),
+                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.1),
+                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.1),
+                MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
                 true),
             m_robotDrive));
   }
@@ -124,7 +124,7 @@ public class RobotContainer {
         new Pose2d(3, 0, new Rotation2d(0)),
         config);
 
-    var thetaController = new ProfiledPIDController(
+        var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
