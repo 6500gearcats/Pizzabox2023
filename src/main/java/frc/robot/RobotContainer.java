@@ -22,6 +22,7 @@ import frc.robot.commands.ArmUp;
 import frc.robot.commands.FloorPosition;
 import frc.robot.commands.StowPosition;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Balance;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,6 +44,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
+  private final Balance m_Balance = new Balance();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
