@@ -16,4 +16,8 @@ public class ClawDown extends CommandBase{
         m_ClawSystem.clawDown();
     }
 
+    public void end(boolean done) {
+        m_ClawSystem.stopClawTilt();
+    }
+
 }

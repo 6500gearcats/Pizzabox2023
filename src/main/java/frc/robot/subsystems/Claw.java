@@ -18,11 +18,15 @@ public class Claw extends SubsystemBase{
     private final DutyCycleEncoder m_clawTiltEncoder = new DutyCycleEncoder(1);
     private double ClawPosition;
 
-    public Claw() {}
+    public Claw() {
+        //m_clawTiltEncoder.reset();
+    }
 
     @Override
     public void periodic() {
         ClawPosition = m_clawTiltEncoder.getAbsolutePosition();
+
+        SmartDashboard.putNumber("Claw Encoder:", ClawPosition);
     }
 
     public double getClawAngle() {
