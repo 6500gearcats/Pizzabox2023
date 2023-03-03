@@ -114,8 +114,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    // NOTICE !!! Not final port number.
-    public static final int kGunnerControllerPort = 13;
+    public static final int kGunnerControllerPort = 1;
   }
 
   public static final class AutoConstants {

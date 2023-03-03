@@ -52,6 +52,9 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_gunnerController = new XboxController(OIConstants.kGunnerControllerPort);
+
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -89,13 +92,13 @@ public class RobotContainer {
             m_robotDrive));
     //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
     //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
-    new JoystickButton(m_driverController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
-    new JoystickButton(m_driverController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
-    new JoystickButton(m_driverController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
-    new JoystickButton(m_driverController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
-    new JoystickButton(m_driverController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
-    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
   }
 
   /**
