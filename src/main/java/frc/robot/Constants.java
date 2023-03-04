@@ -27,8 +27,8 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 3; //was 4.8
-    public static final double kMaxAngularSpeed = 1.5 * Math.PI; // radians per second, was 2
+    public static final double kMaxSpeedMetersPerSecond = 2; //4.8
+    public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second 2
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);
@@ -114,8 +114,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    // NOTICE !!! Not final port number.
-    public static final int kGunnerControllerPort = 13;
+    public static final int kGunnerControllerPort = 1;
   }
 
   public static final class AutoConstants {
@@ -143,8 +142,8 @@ public final class Constants {
     // These are port values (where it's located on the robot)
     public static final int kArmMotorPort = 10;  
     // These are speed values
-    public static final double kArmReverseSpeed = -0.4;
-    public static final double kArmForwardSpeed = 0.4;
+    public static final double kArmReverseSpeed = 0.4;
+    public static final double kArmForwardSpeed = -0.4;
     public static final double kArmStowSpeed = -0.3;
     public static final double kSecondTierSpeed = 0.3;
     /* These encoder values state the threshholds for different arm heights.
@@ -156,8 +155,9 @@ public final class Constants {
     public static final double kEncoderLowerThreshold = 1500;
     public static final double kEncoderUpperThreshold = 2200;
     public static final double kEncoderMaxThreshold = 2900;
-    public static final double kArmStowAngle = 500;
-    public static final double kArmFloorAngle = 1000;
+    public static final double kArmStowAngle = 0;
+    public static final double kArmFloorAngle = 0;
+    public static final double kArmHighAngle = 0.355;
   }
 
   public static final class ClawConstants {
@@ -170,6 +170,7 @@ public final class Constants {
     public static final int kClose = 0;
     public static final double kClawStowAngle = 100;
     public static final double kClawFloorAngle = 200;
+    public static final double kClawHighAngle = 0.67;
   }
 
 }
