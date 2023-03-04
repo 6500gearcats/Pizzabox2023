@@ -105,10 +105,17 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
-    xSpeed *= Math.signum(DriveConstants.kMaxSpeedMetersPerSecond)*Math.pow(DriveConstants.kMaxSpeedMetersPerSecond,2);
-    ySpeed *= Math.signum(DriveConstants.kMaxSpeedMetersPerSecond)*Math.pow(DriveConstants.kMaxSpeedMetersPerSecond,2);
+    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     rot *= DriveConstants.kMaxAngularSpeed;
-
+    // Non linear speed set
+    xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
+    ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
+    /**if(kLeftBumper.value){
+    *  xSpeed /= 2;
+    *  ySpeed /= 2;
+    *};
+    */
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
@@ -120,7 +127,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
-
+  
   /**
    * Sets the wheels into an X formation to prevent movement.
    */

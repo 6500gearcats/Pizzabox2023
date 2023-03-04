@@ -69,8 +69,8 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.1),
-                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.1),
+                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06), //0.1
+                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
                 true),
             m_robotDrive));
@@ -90,6 +90,8 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+    // While left button is pressed, speed is halved
+    //new JoystickButton(m_driverController, Button.kLeftBumper.value);
     //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
     //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
     new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
