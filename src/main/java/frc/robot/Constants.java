@@ -150,14 +150,10 @@ public final class Constants {
     The idea is that the arm stops at each height depending on the desired
     height determined by controller input.*/
     // These encoder threshholds do not have correct values, are only examples
-    public static final double kEncoderMinThreshold = 50;
-    public static final double kEncoderFloorThreshold = 700;
-    public static final double kEncoderLowerThreshold = 1500;
-    public static final double kEncoderUpperThreshold = 2200;
-    public static final double kEncoderMaxThreshold = 2900;
     public static final double kArmStowAngle = 0;
     public static final double kArmFloorAngle = 0;
-    public static final double kArmHighAngle = 0.355;
+    public static final double kArmHighAngleMax = 0.365;
+    public static final double kArmHighAngleMin = 0.345;
   }
 
   public static final class ClawConstants {
@@ -170,7 +166,8 @@ public final class Constants {
     public static final int kClose = 0;
     public static final double kClawStowAngle = 100;
     public static final double kClawFloorAngle = 200;
-    public static final double kClawHighAngle = 0.67;
+    public static final double kClawHighAngleMin = 0.665;
+    public static final double kClawHighAngleMax = 0.675;
   }
 
 }

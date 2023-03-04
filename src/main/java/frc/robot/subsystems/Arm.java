@@ -67,7 +67,7 @@ public class Arm extends SubsystemBase {
 
     public boolean ArmAtAngle() {
       double ArmAngle = m_tiltArmEncoder.getAbsolutePosition();
-      boolean mbArmAtAngle = ArmAngle > ArmConstants.kEncoderUpperThreshold;
+      boolean mbArmAtAngle = ArmAngle > ArmConstants.kArmHighAngleMax;
       return mbArmAtAngle;
     }
 

@@ -18,21 +18,24 @@ public class ScoreHighPosition extends CommandBase {
 
     @Override
     public void execute() {
-        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmHighAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngle) {
+        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmHighAngleMax) {
             m_ArmSystem.armDown();
-            m_ClawSystem.clawDown();
         }
-        else if(m_ArmSystem.getArmAngle() > ArmConstants.kArmHighAngle && m_ClawSystem.getClawAngle() < ClawConstants.kClawHighAngle){
+        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmHighAngleMin) {
             m_ArmSystem.armDown();
+        }
+        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmHighAngleMin) {
+            m_ArmSystem.armDown();
+        }
+        
+        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngleMax) {
             m_ClawSystem.clawUp();
         }
-        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmHighAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngle) {
-            m_ArmSystem.armUp();
-            m_ClawSystem.clawDown();
-        }
-        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmHighAngle && m_ClawSystem.getClawAngle() < ClawConstants.kClawHighAngle) {
-            m_ArmSystem.armUp();
+        else if(m_ClawSystem.getClawAngle() < ClawConstants.kClawHighAngleMin) {
             m_ClawSystem.clawUp();
+        }
+        else if(m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngleMax && m_ClawSystem.getClawAngle() < ClawConstants.kClawHighAngleMin) {
+            m_ClawSystem.stopClaw();
         }
     }
 
