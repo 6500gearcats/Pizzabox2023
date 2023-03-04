@@ -105,8 +105,8 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
-    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    xSpeed *= Math.signum(DriveConstants.kMaxSpeedMetersPerSecond)*Math.pow(DriveConstants.kMaxSpeedMetersPerSecond,2);
+    ySpeed *= Math.signum(DriveConstants.kMaxSpeedMetersPerSecond)*Math.pow(DriveConstants.kMaxSpeedMetersPerSecond,2);
     rot *= DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
