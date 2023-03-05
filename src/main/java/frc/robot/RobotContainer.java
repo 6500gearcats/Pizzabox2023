@@ -108,7 +108,14 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
     // While left button is pressed, speed is halved
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
+        .onTrue(new RunCommand(
+            () -> m_robotDrive.slowTrue(),
+            m_robotDrive));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
+        .onFalse(new RunCommand(
+            () -> m_robotDrive.slowFalse(),
+            m_robotDrive));
     //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
     //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
     new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));

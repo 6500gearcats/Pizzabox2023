@@ -170,12 +170,15 @@ public void slowFalse(){
     xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
     
+    System.out.println("Prior to slow check");
     if(slowEnable.get())
     {
       xSpeed *= 3/4;
       ySpeed *= 3/4;
       System.out.println("here" + xSpeed + ySpeed);
+      System.out.println("SLOW APPLIED");
     }
+    System.out.println("After slow check");
   
    
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(

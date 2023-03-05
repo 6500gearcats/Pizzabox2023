@@ -11,12 +11,7 @@ public class DriveSlow extends CommandBase{
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
         m_DriveSubsystem.slowTrue();
-    }
-
-    @Override
-    public void end(boolean done) {
-        m_DriveSubsystem.slowFalse();
     }
 }
