@@ -162,19 +162,19 @@ public void slowFalse(){
   
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
-    if(slowEnable.get()){
-      xSpeed *= DriveConstants.kSlowSpeedMetersPerSecond;
-      ySpeed *= DriveConstants.kSlowSpeedMetersPerSecond;
-    }
-    else{
-      xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-      ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    }
+    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
     xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
     
+    if(slowEnable.get())
+    {
+      xSpeed *= 3/4;
+      ySpeed *= 3/4;
+    }
   
    
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
