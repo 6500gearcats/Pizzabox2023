@@ -14,12 +14,24 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmDown;
+import frc.robot.commands.ArmUp;
+import frc.robot.commands.ClawDown;
+import frc.robot.commands.ClawUp;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.FloorPosition;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.ScoreHighPosition;
+import frc.robot.commands.StowPosition;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Gyro;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -38,6 +50,8 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -47,13 +61,15 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
- 
-
-
-
+  private final Arm m_Arm = new Arm();
+  private final Claw m_Claw = new Claw();
+  private final Gyro m_Gyro = new Gyro();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_gunnerController = new XboxController(OIConstants.kGunnerControllerPort);
+
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -87,10 +103,19 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+    //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
+    //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
   }
 
   /**
