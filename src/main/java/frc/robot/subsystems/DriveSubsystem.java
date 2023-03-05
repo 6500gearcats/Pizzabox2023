@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -43,6 +44,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private final AnalogGyroSim m_gyroSim = new AnalogGyroSim(1);
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
@@ -112,8 +114,16 @@ public class DriveSubsystem extends SubsystemBase {
    * be run in periodic() or during every code loop to maintain accuracy.
    */
   public void updateOdometry() {
+
+    double angle;
+    if (Robot.isSimulation()) {
+      angle = m_gyroSim.getAngle();
+    }
+    else {
+      angle = m_gyro.getAngle();
+    }
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        Rotation2d.fromDegrees(angle),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
