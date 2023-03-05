@@ -38,7 +38,8 @@ public class FloorPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() == ClawConstants.kClawFloorAngle) {
+        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle - 0.3 && m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle + 0.3 
+           && m_ClawSystem.getClawAngle() > ClawConstants.kClawFloorAngle - 0.3 && m_ClawSystem.getClawAngle() < ClawConstants.kClawFloorAngle + 0.3) {
             return true;
         }
         else {

@@ -38,7 +38,8 @@ public class StowPosition extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmStowAngle && m_ClawSystem.getClawAngle() == ClawConstants.kClawStowAngle) {
+        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmStowAngle - 0.3 && m_ArmSystem.getArmAngle() < ArmConstants.kArmStowAngle + 0.3 
+           && m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - 0.3 && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + 0.3) {
             return true;
         }
         else {

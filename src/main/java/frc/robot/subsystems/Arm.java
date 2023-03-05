@@ -65,11 +65,11 @@ public class Arm extends SubsystemBase {
         m_tiltMotor.set(ArmConstants.kArmReverseSpeed);
     }
 
-    public boolean ArmAtAngle() {
+    /*public boolean ArmAtAngle() {
       double ArmAngle = m_tiltArmEncoder.getAbsolutePosition();
       boolean mbArmAtAngle = ArmAngle > ArmConstants.kEncoderUpperThreshold;
       return mbArmAtAngle;
-    }
+    }*/
 
     public boolean LowSwitchPressed() {
         return lowerLimit;
