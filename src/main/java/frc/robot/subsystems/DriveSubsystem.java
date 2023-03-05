@@ -174,6 +174,7 @@ public void slowFalse(){
     {
       xSpeed *= 3/4;
       ySpeed *= 3/4;
+      System.out.println("here" + xSpeed + ySpeed);
     }
   
    
