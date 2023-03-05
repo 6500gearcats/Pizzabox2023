@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DriveSubsystem extends SubsystemBase {
-  static AtomicBoolean slowEnable = new AtomicBoolean();
+  private AtomicBoolean slowEnable = new AtomicBoolean();
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
