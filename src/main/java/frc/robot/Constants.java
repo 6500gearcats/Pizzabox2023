@@ -163,7 +163,7 @@ public final class Constants {
     public static final int kClawMotorPort = 9;
     public static final double kClawReverseSpeed = -0.6;
     public static final double kClawForwardSpeed = 0.6;
-    public static final double kClawStowAngle = 0.55; //lower limit is .53
+    public static final double kClawStowAngle = 0.5; //upper limit for stow is .53
     public static final double kClawFloorAngle = 200;
     public static final double kClawHighAngle = 0.67;
     public static final double kClawUpperLimit = 0.815;
