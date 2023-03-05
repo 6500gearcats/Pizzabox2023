@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DriveSubsystem extends SubsystemBase {
-  private AtomicBoolean slowEnable = new AtomicBoolean();
+  
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -140,6 +140,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
+public void slowTrue(){
+  slowEnable.set(true);
+}
+
+public void slowFalse(){
+  slowEnable.set(false);
+}
 
   /**
    * Method to drive the robot using joystick info.
@@ -150,6 +157,9 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
+  private AtomicBoolean slowEnable = new AtomicBoolean();
+  
+  
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
@@ -158,10 +168,9 @@ public class DriveSubsystem extends SubsystemBase {
     // Non linear speed set
     xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
-    if ( slowEnable.get() ) {
-        xSpeed /= 4;
-        ySpeed /= 4;
-    }
+
+  
+   
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
