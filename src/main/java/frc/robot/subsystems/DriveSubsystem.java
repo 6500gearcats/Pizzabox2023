@@ -18,8 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DriveSubsystem extends SubsystemBase {
+  static AtomicBoolean slowEnable = new AtomicBoolean();
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -155,11 +158,10 @@ public class DriveSubsystem extends SubsystemBase {
     // Non linear speed set
     xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
-    /**if(kLeftBumper.value){
-    *  xSpeed /= 2;
-    *  ySpeed /= 2;
-    *};
-    */
+    if ( slowEnable.get() ) {
+        xSpeed /= 4;
+        ySpeed /= 4;
+    }
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
