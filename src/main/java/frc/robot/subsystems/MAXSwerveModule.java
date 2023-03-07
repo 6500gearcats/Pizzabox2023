@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotBase;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -15,9 +16,15 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class MAXSwerveModule {
+
+  private final int POS_SLOT = 0;
+  private final int VEL_SLOT = 1;
+  private final int SIM_SLOT = 2;
+  
   private final CANSparkMax m_drivingSparkMax;
   private final CANSparkMax m_turningSparkMax;
 
@@ -30,6 +37,14 @@ public class MAXSwerveModule {
   private double m_chassisAngularOffset = 0;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
+  private double m_angleOffset;
+  private double m_currentAngle;
+  private double m_lastAngle;
+
+  private double m_simDriveEncoderPosition;
+  private double m_simDriveEncoderVelocity;
+  private double m_simAngleDifference;
+  private double m_simTurnAngleIncrement;
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
    * encoder, and PID controller. This configuration is specific to the REV
@@ -108,6 +123,8 @@ public class MAXSwerveModule {
     m_chassisAngularOffset = chassisAngularOffset;
     m_desiredState.angle = new Rotation2d(m_turningEncoder.getPosition());
     m_drivingEncoder.setPosition(0);
+
+ 
   }
 
   /**
@@ -131,10 +148,27 @@ public class MAXSwerveModule {
     // Apply chassis angular offset to the encoder position to get the position
     // relative to the chassis.
     return new SwerveModulePosition(
-        m_drivingEncoder.getPosition(),
-        new Rotation2d(m_turningEncoder.getPosition() - m_chassisAngularOffset));
+       getDriveMeters(),
+       getHeadingRotation2d());
   }
 
+  public double getHeadingDegrees() {
+    if(RobotBase.isReal())
+      return m_turningEncoder.getPosition() - m_chassisAngularOffset;
+    else
+      return m_currentAngle;
+  }
+
+  public Rotation2d getHeadingRotation2d() {
+    return Rotation2d.fromDegrees(getHeadingDegrees());
+  }
+
+  public double getDriveMeters() {
+    if(RobotBase.isReal())
+      return m_drivingEncoder.getPosition();
+    else
+      return m_simDriveEncoderPosition;
+  }
   /**
    * Sets the desired state for the module.
    *
@@ -155,6 +189,42 @@ public class MAXSwerveModule {
     m_turningPIDController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     m_desiredState = desiredState;
+
+    double angle =
+            (Math.abs(desiredState.speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01))
+                    ? m_lastAngle
+                    : desiredState.angle.getDegrees(); // Prevent rotating module if speed is less than 1%. Prevents Jittering.
+                    m_turningPIDController.setReference(angle, CANSparkMax.ControlType.kPosition, POS_SLOT);
+
+
+    if (RobotBase.isSimulation()) {
+      simUpdateDrivePosition(desiredState);
+//      simTurnPosition(angle);
+      m_currentAngle = angle;
+
+    }
+  }
+
+  private void simUpdateDrivePosition(SwerveModuleState state) {
+    m_simDriveEncoderVelocity = state.speedMetersPerSecond;
+    double distancePer20Ms = m_simDriveEncoderVelocity / 50.0;
+
+    m_simDriveEncoderPosition += distancePer20Ms;
+  }
+  private void simTurnPosition(double angle) {
+    if (angle != m_currentAngle && m_simTurnAngleIncrement == 0) {
+      m_simAngleDifference = angle - m_currentAngle;
+      m_simTurnAngleIncrement = m_simAngleDifference / 20.0;// 10*20ms = .2 sec move time
+    }
+
+    if (m_simTurnAngleIncrement != 0) {
+      m_currentAngle += m_simTurnAngleIncrement;
+
+      if ((Math.abs(angle - m_currentAngle)) < .1) {
+        m_currentAngle = angle;
+        m_simTurnAngleIncrement = 0;
+      }
+    }
   }
 
   /** Zeroes all the SwerveModule encoders. */
