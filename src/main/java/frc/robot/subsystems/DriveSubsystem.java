@@ -172,8 +172,8 @@ public void slowFalse(){
     
     if(slowEnable.get())
     {
-      xSpeed *= 3/4;
-      ySpeed *= 3/4;
+      xSpeed *= DriveConstants.kSlowModeModifier;
+      ySpeed *= DriveConstants.kSlowModeModifier;
       System.out.println("here" + xSpeed + ySpeed);
     }
   

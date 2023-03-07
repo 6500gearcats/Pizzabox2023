@@ -29,7 +29,10 @@ public final class Constants {
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 2; //4.8
     public static final double kSlowSpeedMetersPerSecond = .5; //2.25
-    public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second 2
+    public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second (was 2)
+
+    //slow mode
+    public static final double kSlowModeModifier = 0.75; // 3/4
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);

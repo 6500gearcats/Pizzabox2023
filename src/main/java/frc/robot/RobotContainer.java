@@ -26,6 +26,7 @@ import frc.robot.commands.ArmUp;
 import frc.robot.commands.ClawDown;
 import frc.robot.commands.ClawUp;
 import frc.robot.commands.CloseClaw;
+import frc.robot.commands.DriveSlow;
 import frc.robot.commands.ToFloor;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.ScoreHigh;
@@ -110,19 +111,11 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
     // While left button is pressed, speed is halved
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
-    //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
-    //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
-    //new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
-    //new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
-    //new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
-    //new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
-    //new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
-    //new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
-    //new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
+    //new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
     //DRIVER CONTROLLER
-
+    //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/4)
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveSlow(m_robotDrive));
 
     //GUNNER CONTROLLER
     //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
