@@ -6,12 +6,12 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
-public class StowPosition extends CommandBase {
+public class StowArm extends CommandBase {
     
     private final Arm m_ArmSystem;
     private final Claw m_ClawSystem;
 
-    public StowPosition(Arm theArm, Claw theClaw) {
+    public StowArm(Arm theArm, Claw theClaw) {
         m_ArmSystem = theArm;
         m_ClawSystem = theClaw;
     }
@@ -37,13 +37,18 @@ public class StowPosition extends CommandBase {
     }
 
     @Override
+    public void execute() {
+        if(m_ArmSystem.LimitSwitchPressed()) {
+            m_ArmSystem.stopArm();
+        }
+        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - 0.03 && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + 0.03) {
+            m_ClawSystem.stopClawTilt();
+        }
+    }
+
+    @Override
     public boolean isFinished() {
-        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmStowAngle && m_ClawSystem.getClawAngle() == ClawConstants.kClawStowAngle) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return m_ArmSystem.LimitSwitchPressed() && m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - 0.03 && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + 0.03;
     }
     
     @Override

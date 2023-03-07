@@ -56,23 +56,29 @@ public class Arm extends SubsystemBase {
     }
 
 
-    //Moves arm up and down
+    //Moves arm up at constant speed
     public void armUp() {
         m_tiltMotor.set(ArmConstants.kArmForwardSpeed);
     }
 
+    //same method that takes in a speed to be used instead of our constant, useful in the ArmUp command
+    public void armUp(double speed) {
+        m_tiltMotor.set(speed);
+    }
+
+    //Moves arm down at constant speed
     public void armDown() {
         m_tiltMotor.set(ArmConstants.kArmReverseSpeed);
     }
 
-    public boolean ArmAtAngle() {
-      double ArmAngle = m_tiltArmEncoder.getAbsolutePosition();
-      boolean mbArmAtAngle = ArmAngle > ArmConstants.kEncoderUpperThreshold;
-      return mbArmAtAngle;
+    //same method that takes in a speed to be used instead of our constant, useful in the ArmDown command
+    public void armDown(double speed) {
+        m_tiltMotor.set(speed);
     }
 
-    public boolean LowSwitchPressed() {
-        return lowerLimit;
+    //returns true if lower limit switch is pressed
+    public boolean LimitSwitchPressed() {
+      return m_lowerLimitSwitch.get();
     }
 
     public double getArmAngle() {
