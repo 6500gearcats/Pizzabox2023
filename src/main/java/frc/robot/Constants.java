@@ -28,7 +28,7 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 2; //4.8
-    public static final double kSlowSpeedMetersPerSecond = 2.25; 
+    public static final double kSlowSpeedMetersPerSecond = .5; //2.25
     public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second 2
 
     // Chassis configuration
