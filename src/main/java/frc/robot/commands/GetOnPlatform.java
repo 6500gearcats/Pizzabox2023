@@ -19,7 +19,7 @@ public class GetOnPlatform extends CommandBase{
 
     @Override
     public void execute(){
-        m_drive.drive(0.25, 0, 0, true);
+        m_drive.drive(0.15, 0, 0, true);
     }
 
 

@@ -174,7 +174,7 @@ public final class Constants {
   }
 
   public static final class GyroConstants{
-    public static final double kTiltPitch = 100;
+    public static final double kTiltPitch = 80; //11? tilt angle=
     public static final double kPlatformLevel = 85;
   }
 }

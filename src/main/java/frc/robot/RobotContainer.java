@@ -22,6 +22,7 @@ import frc.robot.commands.ArmDown;
 import frc.robot.commands.ArmUp;
 import frc.robot.commands.ClawDown;
 import frc.robot.commands.ClawUp;
+import frc.robot.commands.ClimbPlatform;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.FloorPosition;
 import frc.robot.commands.OpenClaw;
@@ -101,6 +102,7 @@ public class RobotContainer {
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
     new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
     new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kStart.value).whileTrue(new ClimbPlatform(m_robotDrive, m_Gyro));
   }
 
   /**
