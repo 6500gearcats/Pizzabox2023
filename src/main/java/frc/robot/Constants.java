@@ -173,4 +173,8 @@ public final class Constants {
     public static final double kClawHighAngle = 0.67;
   }
 
+  public static final class GyroConstants{
+    public static final double kTiltPitch = 100;
+    public static final double kPlatformLevel = 85;
+  }
 }

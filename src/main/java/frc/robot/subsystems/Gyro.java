@@ -2,15 +2,16 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.hal.simulation.SimValueCallback;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gyro extends SubsystemBase {
@@ -20,6 +21,10 @@ public class Gyro extends SubsystemBase {
 
     public Gyro() {
         // stick = new Joystick(0);
+        if (RobotBase.isSimulation()) {
+            SmartDashboard.putNumber(getName(), getPitch());
+          }
+          
         try {
             /* Communicate w/navX-MXP via the MXP SPI Bus. */
             /* Alternatively: I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB */
@@ -118,9 +123,11 @@ public class Gyro extends SubsystemBase {
 
     }
 
+
+
     /* Return the NavX pitch angle */
-    public float getPitch() {
-        return ahrs.getPitch();
+    public double getPitch() {
+        return 100; //ahrs.getPitch();
     }
 
 }
