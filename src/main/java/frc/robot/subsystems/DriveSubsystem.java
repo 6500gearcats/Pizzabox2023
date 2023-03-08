@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.REVPhysicsSim;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.simulation.ADIS16470_IMUSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
@@ -45,7 +48,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
+  
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private final ADIS16470_IMUSim m_GyroSim = new ADIS16470_IMUSim(m_gyro);
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -57,7 +62,10 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
         
-   
+  //private Pigeon2 m_pigeon = new Pigeon2(CAN.pigeon);
+
+  private double m_simYaw;
+
   private final Field2d m_field = new Field2d();
 
   private Pose2d m_simOdometryPose;
@@ -84,8 +92,42 @@ public class DriveSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block
     updateOdometry();
 
+  }
+
+ 
+  @Override
+  public void simulationPeriodic() {
+    ChassisSpeeds chassisSpeed = DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    m_simYaw += chassisSpeed.omegaRadiansPerSecond * 0.02;
+
+    REVPhysicsSim.getInstance().run();
+      
+    // m_IMUSim.setGyroAngleX(-m_DriveSim.getHeading().getDegrees());
+    //double angle = m_gyro.getAngle();
+    
+    m_GyroSim.setGyroAngleX(m_simYaw);
+    
+    updateOdometry();
+
     m_field.setRobotPose(m_simOdometryPose);
 
+  }
+
+
+
+  public SwerveModuleState[] getModuleStates() {
+    return new SwerveModuleState[] {
+            m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
+          };
+    };
+  
+  public SwerveModulePosition[] getModulePositions() {
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_rearLeft.getPosition(),
+      m_rearRight.getPosition()
+    };
   }
 
   /**
@@ -95,7 +137,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     if (Robot.isReal()) {
-    return m_odometry.getPoseMeters();
+      return m_odometry.getPoseMeters();
     } else {
       return m_simOdometryPose;
     }
@@ -109,12 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        },
+        getModulePositions(),
         pose);
   }
 
@@ -125,19 +162,12 @@ public class DriveSubsystem extends SubsystemBase {
   public void updateOdometry() {
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        });
+        getModulePositions());
 
 
     if (Robot.isSimulation()) {
       SwerveModuleState[] measuredStates =
-          new SwerveModuleState[] {
-            m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
-          };
+          getModuleStates();
       ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
       m_simOdometryPose =
           m_simOdometryPose.exp(

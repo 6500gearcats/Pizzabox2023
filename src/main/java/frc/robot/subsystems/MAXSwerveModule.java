@@ -169,6 +169,16 @@ public class MAXSwerveModule {
     else
       return m_simDriveEncoderPosition;
   }
+
+
+  public double getDriveMetersPerSecond() {
+    if(RobotBase.isReal())
+      return m_drivingEncoder.getVelocity();
+    else
+      return m_simDriveEncoderVelocity;
+  }
+
+
   /**
    * Sets the desired state for the module.
    *
@@ -199,7 +209,7 @@ public class MAXSwerveModule {
 
     if (RobotBase.isSimulation()) {
       simUpdateDrivePosition(desiredState);
-//      simTurnPosition(angle);
+      //simTurnPosition(angle);
       m_currentAngle = angle;
 
     }
