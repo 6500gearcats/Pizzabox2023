@@ -62,7 +62,7 @@ public class Arm extends SubsystemBase {
     }
 
     //same method that takes in a speed to be used instead of our constant, useful in the ArmUp command
-    public void armUp(double speed) {
+    public void armUpSpeed(double speed) {
         m_tiltMotor.set(speed);
     }
 
@@ -72,7 +72,7 @@ public class Arm extends SubsystemBase {
     }
 
     //same method that takes in a speed to be used instead of our constant, useful in the ArmDown command
-    public void armDown(double speed) {
+    public void armDownSpeed(double speed) {
         m_tiltMotor.set(speed);
     }
 

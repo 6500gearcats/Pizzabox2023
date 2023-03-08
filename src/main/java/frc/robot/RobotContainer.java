@@ -109,9 +109,14 @@ public class RobotContainer {
 
     //GUNNER CONTROLLER
     //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
-    new Trigger(() -> m_gunnerController.getLeftY() > 0.1).whileTrue(new ArmUp(m_Arm, ArmConstants.kArmForwardMaxSpeed * m_gunnerController.getLeftY()));
+    //new Trigger(() -> m_gunnerController.getLeftY() > 0).whileTrue(new ArmUpWithSpeed(m_Arm, (ArmConstants.kArmForwardMaxSpeed * m_gunnerController.getLeftY())));
     //sets the left stick to move arm down, increasing in speed with how far the joystick is pushed
-    new Trigger(() -> m_gunnerController.getLeftY() < -0.1).whileTrue(new ArmDown(m_Arm, ArmConstants.kArmReverseMaxSpeed * m_gunnerController.getLeftY()));
+    //new Trigger(() -> m_gunnerController.getLeftY() < 0).whileTrue(new ArmDownWithSpeed(m_Arm, (ArmConstants.kArmReverseMaxSpeed * m_gunnerController.getLeftY())));
+  
+    //sets left stick to arm up or down at constant speed
+    new Trigger(() -> m_gunnerController.getLeftY() > 0.05).whileTrue(new ArmUp(m_Arm));
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmDown(m_Arm));
+
     //sets the right stick to move claw up, at a constand speed
     new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUp(m_Claw));
     //sets the right stick to move claw down, at a constant speed
@@ -129,6 +134,8 @@ public class RobotContainer {
     new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
     //sets score low to a button
     new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    //stops arm and claw with x
+    new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StopArm(m_Arm, m_Claw));
 
   }
 

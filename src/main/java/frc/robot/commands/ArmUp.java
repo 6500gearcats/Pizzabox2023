@@ -6,17 +6,15 @@ import frc.robot.subsystems.Arm;
 public class ArmUp extends CommandBase{
     
     private final Arm m_ArmSystem;
-    private double m_ArmSpeed;
 
-    public ArmUp(Arm theArm, double speed) {
+    public ArmUp(Arm theArm) {
         m_ArmSystem = theArm;
-        m_ArmSpeed = speed;
         addRequirements(m_ArmSystem);
     }
 
     @Override
     public void execute() {
-        m_ArmSystem.armUp(m_ArmSpeed);
+        m_ArmSystem.armUp();
     }
 
     @Override
