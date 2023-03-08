@@ -21,16 +21,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmDown;
-import frc.robot.commands.ArmUp;
-import frc.robot.commands.ClawDown;
-import frc.robot.commands.ClawUp;
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.DriveSlow;
-import frc.robot.commands.ToFloor;
-import frc.robot.commands.OpenClaw;
-import frc.robot.commands.ScoreHigh;
-import frc.robot.commands.StowArm;
+import frc.robot.commands.*;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.Claw;
@@ -111,7 +102,8 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
     // While left button is pressed, speed is halved
-    //new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+    //new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(new DriveSlow(m_robotDrive));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
 
     //DRIVER CONTROLLER
     //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/4)

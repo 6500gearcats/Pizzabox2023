@@ -18,10 +18,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DriveSubsystem extends SubsystemBase {
-  private AtomicBoolean slowEnable = new AtomicBoolean();
+  public boolean slowEnable = false;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -140,14 +139,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-public void slowTrue(){
-  slowEnable.set(true);
-}
-
-public void slowFalse(){
-  slowEnable.set(false);
-}
-
   /**
    * Method to drive the robot using joystick info.
    *
@@ -170,7 +161,7 @@ public void slowFalse(){
     xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
     
-    if(slowEnable.get())
+    if(slowEnable)
     {
       xSpeed *= DriveConstants.kSlowModeModifier;
       ySpeed *= DriveConstants.kSlowModeModifier;
