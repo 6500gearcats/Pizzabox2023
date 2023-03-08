@@ -101,13 +101,11 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    // While left button is pressed, speed is halved
-    //new JoystickButton(m_driverController, Button.kLeftBumper.value).onTrue(new DriveSlow(m_robotDrive));
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
 
     //DRIVER CONTROLLER
-    //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/4)
+    //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/7)
     new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveSlow(m_robotDrive));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
 
     //GUNNER CONTROLLER
     //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed

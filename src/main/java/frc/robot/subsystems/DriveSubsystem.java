@@ -158,8 +158,8 @@ public class DriveSubsystem extends SubsystemBase {
     
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
-    xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
-    ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
+    //xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
+    //ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
     
     if(slowEnable)
     {
