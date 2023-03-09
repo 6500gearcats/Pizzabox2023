@@ -127,7 +127,7 @@ public class Gyro extends SubsystemBase {
 
     /* Return the NavX pitch angle */
     public double getPitch() {
-        return 100; //ahrs.getPitch();
+        return ahrs.getPitch();
     }
 
 }
