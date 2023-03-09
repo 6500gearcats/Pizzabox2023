@@ -153,7 +153,7 @@ public final class Constants {
     
     //not set right
     //encoder values
-    public static final double kEncoderUpperThreshold = 1;
+    public static final double kEncoderUpperThreshold = 0.2;
     public static final double kArmStowAngle = 0;
     public static final double kArmFloorAngle = 0;
     public static final double kArmHighAngle = 0.315; //good
@@ -179,7 +179,7 @@ public final class Constants {
     public static final double kClawHighAngle = 0.67;
     public static final double kClawMidAngle = 0.67; //probably same as high
     public static final double kClawLowAngle = 0.67; //probably same as high
-    public static final double kClawLowerLimit = 0.22; //good
+    public static final double kClawLowerLimit = 0.27; //good
     public static final double kClawUpperLimit = 0.815; //good
   }
 
