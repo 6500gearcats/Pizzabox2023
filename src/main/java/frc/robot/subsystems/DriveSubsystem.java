@@ -75,8 +75,12 @@ public class DriveSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block
     updateOdometry();
 
-    m_field.setRobotPose(m_simOdometryPose);
-
+    if (Robot.isReal()) {
+      m_field.setRobotPose(m_odometry.getPoseMeters());
+    }
+    else {
+      m_field.setRobotPose(m_simOdometryPose);
+    }
   }
 
   /**
