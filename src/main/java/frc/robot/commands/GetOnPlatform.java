@@ -26,4 +26,8 @@ public class GetOnPlatform extends CommandBase{
     public boolean isFinished(){
         return (Math.abs(m_gyro.getPitch()) <= GyroConstants.kPlatformLevel);
     }
+
+    public void end() {
+        m_drive.drive(0,0,0,true);
+    }
 }

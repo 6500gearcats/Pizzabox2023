@@ -102,7 +102,7 @@ public class RobotContainer {
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
     new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
     new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
-    new JoystickButton(m_gunnerController, Button.kStart.value).whileTrue(new ClimbPlatform(m_robotDrive, m_Gyro));
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive, m_Gyro));
   }
 
   /**
