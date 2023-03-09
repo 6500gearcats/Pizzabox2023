@@ -53,6 +53,7 @@ public class Arm extends SubsystemBase {
         //lowerLimit = m_lowerLimitSwitch.get();
       
         SmartDashboard.putNumber("Arm Enocder:", ArmPosition);
+        SmartDashboard.putNumber("Arm motor speed", m_tiltMotor.get());
     }
 
 
