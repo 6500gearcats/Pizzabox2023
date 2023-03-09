@@ -17,18 +17,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmDown;
-import frc.robot.commands.ArmUp;
-import frc.robot.commands.ClawDown;
-import frc.robot.commands.ClawUp;
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.FloorPosition;
-import frc.robot.commands.OpenClaw;
-import frc.robot.commands.ScoreHighPosition;
-import frc.robot.commands.StowPosition;
+import frc.robot.commands.*;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.Claw;
@@ -38,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,17 +101,42 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    // While left button is pressed, speed is halved
-    //new JoystickButton(m_driverController, Button.kLeftBumper.value);
-    //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
-    //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
-    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
-    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
-    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
-    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
-    new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
-    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
-    new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
+
+    //DRIVER CONTROLLER
+    //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/7)
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveSlow(m_robotDrive));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
+
+    //GUNNER CONTROLLER
+    //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
+    //new Trigger(() -> m_gunnerController.getLeftY() > 0).whileTrue(new ArmUpWithSpeed(m_Arm, (ArmConstants.kArmForwardMaxSpeed * m_gunnerController.getLeftY())));
+    //sets the left stick to move arm down, increasing in speed with how far the joystick is pushed
+    //new Trigger(() -> m_gunnerController.getLeftY() < 0).whileTrue(new ArmDownWithSpeed(m_Arm, (ArmConstants.kArmReverseMaxSpeed * m_gunnerController.getLeftY())));
+  
+    //sets left stick to arm up or down at constant speed
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUp(m_Arm));
+    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDown(m_Arm));
+
+    //sets the right stick to move claw up, at a constand speed
+    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUp(m_Claw));
+    //sets the right stick to move claw down, at a constant speed
+    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDown(m_Claw));
+    //sets claw open to right button and claw close to left button
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new OpenClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new CloseClaw(m_Claw));
+    //sets stow arm to back button
+    new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new StowArm(m_Arm, m_Claw));
+    //sets arm to floor to start button
+    new JoystickButton(m_gunnerController, Button.kStart.value).whileTrue(new ToFloor(m_Arm, m_Claw));
+    //sets Score high to y button
+    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    //sets score mid to b button
+    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    //sets score low to a button
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    //stops arm and claw with x
+    new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StopArm(m_Arm, m_Claw));
+
   }
 
   /**

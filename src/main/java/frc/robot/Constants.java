@@ -28,8 +28,11 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 2; //4.8
-    public static final double kSlowSpeedMetersPerSecond = 2.25; 
-    public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second 2
+    public static final double kSlowSpeedMetersPerSecond = 1.5; //2.25
+    public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second (was 2)
+
+    //slow mode
+    public static final double kSlowModeModifier = 3.0/7.0; //3/4
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);
@@ -145,33 +148,39 @@ public final class Constants {
     // These are speed values
     public static final double kArmReverseSpeed = 0.4;
     public static final double kArmForwardSpeed = -0.4;
-    public static final double kArmStowSpeed = -0.3;
-    public static final double kSecondTierSpeed = 0.3;
-    /* These encoder values state the threshholds for different arm heights.
-    The idea is that the arm stops at each height depending on the desired
-    height determined by controller input.*/
-    // These encoder threshholds do not have correct values, are only examples
-    public static final double kEncoderMinThreshold = 50;
-    public static final double kEncoderFloorThreshold = 700;
-    public static final double kEncoderLowerThreshold = 1500;
-    public static final double kEncoderUpperThreshold = 2200;
-    public static final double kEncoderMaxThreshold = 2900;
+    public static final double kArmForwardMaxSpeed = 0.9;
+    public static final double kArmReverseMaxSpeed = -0.9;
+    
+    //not set right
+    //encoder values
+    public static final double kEncoderUpperThreshold = 0.2;
     public static final double kArmStowAngle = 0;
     public static final double kArmFloorAngle = 0;
-    public static final double kArmHighAngle = 0.355;
+    public static final double kArmHighAngle = 0.315; //good
+    public static final double kArmMidAngle = 0.37; //good
+    public static final double kArmLowAngle = 0;
   }
 
   public static final class ClawConstants {
+    //ports
     public static final int kClawMotorPort = 9;
-    public static final double kClawReverseSpeed = -0.6;
-    public static final double kClawForwardSpeed = 0.6;
-    public static final double kClawStowSpeed = -0.3;
-    public static final double kClawSecondTierSpeed = 0.3;
     public static final int kOpen = 0;
     public static final int kClose = 0;
-    public static final double kClawStowAngle = 100;
-    public static final double kClawFloorAngle = 200;
+    //speeds (claw is reversed)
+    public static final double kClawReverseSpeed = 0.6;
+    public static final double kClawForwardSpeed = -0.6;
+    public static final double kClawForwardMaxSpeed = -0.9;
+    public static final double kClawReverseMaxSpeed = 0.9;
+
+    //not set right
+    //encoder values
+    public static final double kClawStowAngle = 0.5; //good
+    public static final double kClawFloorAngle = 0;
     public static final double kClawHighAngle = 0.67;
+    public static final double kClawMidAngle = 0.67; //probably same as high
+    public static final double kClawLowAngle = 0.67; //probably same as high
+    public static final double kClawLowerLimit = 0.27; //good
+    public static final double kClawUpperLimit = 0.815; //good
   }
 
 }

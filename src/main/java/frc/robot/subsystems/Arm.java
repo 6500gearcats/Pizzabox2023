@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 //import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -33,6 +34,8 @@ public class Arm extends SubsystemBase {
     //private boolean m_isArmStored = false;
     //private boolean m_isArmCapped = false;
 
+    private final SlewRateLimiter armFilter = new SlewRateLimiter(0.6);
+
     private double ArmPosition;
     private boolean lowerLimit;
 
@@ -52,29 +55,40 @@ public class Arm extends SubsystemBase {
         ArmPosition = m_tiltArmEncoder.getAbsolutePosition();
         //lowerLimit = m_lowerLimitSwitch.get();
       
-        SmartDashboard.putNumber("Arm Enocder:", ArmPosition);
+        SmartDashboard.putNumber("Arm Encoder:", ArmPosition);
+        SmartDashboard.putNumber("Arm motor speed", m_tiltMotor.get());
+        SmartDashboard.putBoolean("Arm limit: ", m_lowerLimitSwitch.get());
     }
 
 
-    //Moves arm up and down
+    //Moves arm up at constant speed
     public void armUp() {
-        m_tiltMotor.set(ArmConstants.kArmForwardSpeed);
+        m_tiltMotor.set(armFilter.calculate(ArmConstants.kArmForwardSpeed));
     }
 
+    //same method that takes in a speed to be used instead of our constant, useful in the ArmUp command
+    public void armUpSpeed(double speed) {
+        m_tiltMotor.set(armFilter.calculate(speed));
+    }
+
+    //Moves arm down at constant speed
     public void armDown() {
-        m_tiltMotor.set(ArmConstants.kArmReverseSpeed);
+        m_tiltMotor.set(armFilter.calculate(ArmConstants.kArmReverseSpeed));
     }
 
-    public boolean ArmAtAngle() {
-      double ArmAngle = m_tiltArmEncoder.getAbsolutePosition();
-      boolean mbArmAtAngle = ArmAngle > ArmConstants.kEncoderUpperThreshold;
-      return mbArmAtAngle;
+    //same method that takes in a speed to be used instead of our constant, useful in the ArmDown command
+    public void armDownSpeed(double speed) {
+        m_tiltMotor.set(speed);
     }
 
-    public boolean LowSwitchPressed() {
-        return lowerLimit;
+    //returns true if lower limit switch is pressed
+    public boolean LimitSwitchPressed() {
+      return !m_lowerLimitSwitch.get();
     }
 
+    public boolean AtMaxHeight() {
+        return m_tiltArmEncoder.getAbsolutePosition() < ArmConstants.kEncoderUpperThreshold;
+    }
     public double getArmAngle() {
         return m_tiltArmEncoder.getAbsolutePosition();
     }
@@ -83,4 +97,8 @@ public class Arm extends SubsystemBase {
         // Stop the arm motor moving.
         m_tiltMotor.stopMotor();
       }
+
+    public void resetFilter() {
+      armFilter.reset(0);
+    }
 }

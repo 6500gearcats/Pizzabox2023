@@ -20,6 +20,8 @@ import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
+  public boolean slowEnable = false;
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -137,7 +139,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-
   /**
    * Method to drive the robot using joystick info.
    *
@@ -147,19 +148,27 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
+ 
+  
+  
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
-    xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
-    ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
-    /**if(kLeftBumper.value){
-    *  xSpeed /= 2;
-    *  ySpeed /= 2;
-    *};
-    */
+    //xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
+    //ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
+    
+    if(slowEnable)
+    {
+      xSpeed *= DriveConstants.kSlowModeModifier;
+      ySpeed *= DriveConstants.kSlowModeModifier;
+      System.out.println("here" + xSpeed + ySpeed);
+    }
+  
+   
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
