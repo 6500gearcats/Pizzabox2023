@@ -68,6 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_simOdometryPose = m_odometry.getPoseMeters();
     SmartDashboard.putData("Field", m_field);
+    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
   }
 
   @Override
