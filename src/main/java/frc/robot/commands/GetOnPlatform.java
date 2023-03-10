@@ -11,10 +11,8 @@ import frc.robot.Constants.GyroConstants;
 public class GetOnPlatform extends CommandBase{
 
     private final DriveSubsystem m_drive;
-    private final Gyro m_gyro;
-    public GetOnPlatform(DriveSubsystem drive, Gyro gyro){
+    public GetOnPlatform(DriveSubsystem drive){
         m_drive = drive;
-        m_gyro = gyro;
     }
 
     @Override
@@ -24,7 +22,7 @@ public class GetOnPlatform extends CommandBase{
 
 
     public boolean isFinished(){
-        return (Math.abs(m_gyro.getPitch()) <= GyroConstants.kPlatformLevel);
+        return (Math.abs(m_drive.getPitch()) <= GyroConstants.kPlatformLevel);
     }
 
     public void end() {

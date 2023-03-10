@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -13,6 +17,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
@@ -44,7 +50,8 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+//  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private AHRS m_gyro;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
@@ -53,8 +60,21 @@ public class DriveSubsystem extends SubsystemBase {
 
   private Pose2d m_simOdometryPose;
 
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+
+    try {
+      /* Communicate w/navX-MXP via the MXP SPI Bus. */
+      /* Alternatively: I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB */
+      /*
+       * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
+       * details.
+       */
+      m_gyro = new AHRS(SPI.Port.kMXP);
+    } catch (RuntimeException ex) {
+        DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+    }
 
     m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -82,6 +102,14 @@ public class DriveSubsystem extends SubsystemBase {
     else {
       m_field.setRobotPose(m_simOdometryPose);
     }
+  }
+
+
+  @Override
+  public void simulationPeriodic() {
+    int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+    SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+    angle.set(5.0);
   }
 
   /**
@@ -241,5 +269,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public double getPitch() {
+    //Return the pitch angle from the gyro
+    return m_gyro.getPitch();
   }
 }

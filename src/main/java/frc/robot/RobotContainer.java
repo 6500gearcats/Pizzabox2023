@@ -57,7 +57,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
-  private final Gyro m_Gyro = new Gyro();
+  //private final Gyro m_Gyro = new Gyro();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -137,7 +137,7 @@ public class RobotContainer {
     //stops arm and claw with x
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StopArm(m_Arm, m_Claw));
 
-    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive, m_Gyro));
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
 
   }
 

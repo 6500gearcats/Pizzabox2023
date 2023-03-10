@@ -6,10 +6,10 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Gyro;
 
 public class ClimbPlatform extends SequentialCommandGroup{
-    public ClimbPlatform(DriveSubsystem Drive, Gyro Gyro){
+    public ClimbPlatform(DriveSubsystem Drive){
         addCommands(
-            new FindPlatform(Drive, Gyro),
-            new GetOnPlatform(Drive, Gyro)
+            new FindPlatform(Drive),
+            new GetOnPlatform(Drive)
         );
     }
 }
