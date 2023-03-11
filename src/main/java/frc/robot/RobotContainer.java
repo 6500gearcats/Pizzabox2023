@@ -21,7 +21,20 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+<<<<<<< HEAD
 import frc.robot.commands.*;
+=======
+import frc.robot.commands.ArmDown;
+import frc.robot.commands.ArmUp;
+import frc.robot.commands.ClawDown;
+import frc.robot.commands.ClawUp;
+import frc.robot.commands.ClimbPlatform;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.FloorPosition;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.ScoreHighPosition;
+import frc.robot.commands.StowPosition;
+>>>>>>> origin/Gyro-merge
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.Claw;
@@ -101,6 +114,7 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+<<<<<<< HEAD
 
     //DRIVER CONTROLLER
     //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/7)
@@ -137,6 +151,18 @@ public class RobotContainer {
     //stops arm and claw with x
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StopArm(m_Arm, m_Claw));
 
+=======
+    //new JoystickButton(m_driverController, Button.kBack.value).onTrue(new StowPosition(m_Arm, m_Claw));
+    //new JoystickButton(m_driverController, Button.kStart.value).onTrue(new FloorPosition(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ArmUp(m_Arm));
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ArmDown(m_Arm));
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new ClawUp(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ClawDown(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new ScoreHighPosition(m_Arm, m_Claw));
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive, m_Gyro));
+>>>>>>> origin/Gyro-merge
   }
 
   /**
