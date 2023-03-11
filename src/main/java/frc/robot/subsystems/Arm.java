@@ -93,6 +93,16 @@ public class Arm extends SubsystemBase {
         return m_tiltArmEncoder.getAbsolutePosition();
     }
 
+    public void moveToTarget(double target) {
+      if (m_tiltArmEncoder.getAbsolutePosition() < target) {
+        armUp();
+      }
+      
+      if (m_tiltArmEncoder.getAbsolutePosition() > target) {
+        armDown();
+      }
+    }
+
     public void stopArm() {
         // Stop the arm motor moving.
         m_tiltMotor.stopMotor();
@@ -100,5 +110,9 @@ public class Arm extends SubsystemBase {
 
     public void resetFilter() {
       armFilter.reset(0);
+    }
+
+    public boolean armAtTarget(double targetAngle) {
+      return Math.abs(getArmAngle() - targetAngle) < 0.05;
     }
 }
