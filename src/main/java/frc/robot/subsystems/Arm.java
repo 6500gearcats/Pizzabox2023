@@ -95,11 +95,11 @@ public class Arm extends SubsystemBase {
 
     public void moveToTarget(double target) {
       if (m_tiltArmEncoder.getAbsolutePosition() < target) {
-        armUp();
+        armDown();
       }
       
       if (m_tiltArmEncoder.getAbsolutePosition() > target) {
-        armDown();
+        armUp();
       }
     }
 
@@ -113,6 +113,6 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean armAtTarget(double targetAngle) {
-      return Math.abs(getArmAngle() - targetAngle) < 0.05;
+      return Math.abs(getArmAngle() - targetAngle) < 0.01;
     }
 }
