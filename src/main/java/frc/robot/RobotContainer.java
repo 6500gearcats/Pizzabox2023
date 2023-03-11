@@ -174,6 +174,8 @@ public class RobotContainer {
     Command fullAuto = autoBuilder.fullAuto(pathGroup);
 
     // Run path following command, then stop at the end.
-    return fullAuto.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return fullAuto
+    .andThen(new AutoScore(m_robotDrive, m_Arm, m_Claw, m_Gyro))
+    .andThen(() -> m_robotDrive.drive(0, 0, 0, false));
   }
 }
