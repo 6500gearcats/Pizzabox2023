@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -106,6 +107,9 @@ public class RobotContainer {
     //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/7)
     new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveSlow(m_robotDrive));
     new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
+    //Turn on lights: Yellow = Back,     Purple = Start
+    new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new LightYellow());
+    new JoystickButton(m_driverController, Button.kStart.value).whileTrue(new LightPurple());
 
     //GUNNER CONTROLLER
     //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
