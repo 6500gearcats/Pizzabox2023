@@ -143,11 +143,11 @@ public class RobotContainer {
     //sets arm to floor to start button
     new JoystickButton(m_gunnerController, Button.kStart.value).whileTrue(new ToFloor(m_Arm, m_Claw));
     //sets Score high to y button
-    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kY.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm));
     //sets score mid to b button
-    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmMidAngle, m_Arm));
     //sets score low to a button
-    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ScoreHigh(m_Arm, m_Claw));
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmLowAngle, m_Arm));
     //stops arm and claw with x
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StopArm(m_Arm, m_Claw));
 
