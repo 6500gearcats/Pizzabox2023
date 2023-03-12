@@ -32,7 +32,7 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second (was 2)
 
     //slow mode
-    public static final double kSlowModeModifier = 3.0/7.0; //3/4
+    public static final double kSlowModeModifier = 2.0/7.0; //3/4
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);
