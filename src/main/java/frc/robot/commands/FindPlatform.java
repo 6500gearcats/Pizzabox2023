@@ -19,11 +19,11 @@ public class FindPlatform extends CommandBase{
 
     @Override
     public void execute(){
-        m_drive.drive(0.15, 0, 0, true);
+        m_drive.drive(0.3, 0, 0, true);
     }
 
 
     public boolean isFinished(){
-        return (Math.abs(m_gyro.getPitch()) < GyroConstants.kTiltPitch);
+        return (Math.abs(m_gyro.getPitch()) < 75);
     }
 }

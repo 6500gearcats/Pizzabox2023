@@ -19,12 +19,12 @@ public class GetOnPlatform extends CommandBase{
 
     @Override
     public void execute(){
-        m_drive.drive(0.15, 0, 0, true);
+        m_drive.drive(0.2, 0, 0, true);
     }
 
 
     public boolean isFinished(){
-        return (Math.abs(m_gyro.getPitch()) <= GyroConstants.kPlatformLevel);
+        return (Math.abs(m_gyro.getPitch()) >= GyroConstants.kPlatformLevel);
     }
 
     public void end() {
