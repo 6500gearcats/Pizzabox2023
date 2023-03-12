@@ -15,6 +15,7 @@ public class OpenClaw extends CommandBase{
     @Override
     public void execute() {
         m_ClawSystem.openClaw();
+        System.out.println("Opened Claw");
     }
 
 }

@@ -31,19 +31,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.DriverStation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 
@@ -126,8 +126,8 @@ public class RobotContainer {
     //sets the right stick to move claw down, at a constant speed
     new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDown(m_Claw));
     //sets claw open to right button and claw close to left button
-    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new OpenClaw(m_Claw));
-    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new CloseClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
     //sets stow arm to back button
     new JoystickButton(m_gunnerController, Button.kBack.value).whileTrue(new StowArm(m_Arm, m_Claw));
     //sets arm to floor to start button
@@ -151,10 +151,23 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
    // This will load the file "FullAuto.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
     // for every path in the group
-    ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("fullAuto", new PathConstraints(4, 3));
+    //ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("fullAuto", new PathConstraints(4, 3));
 
+    ArrayList<PathPlannerTrajectory> pathGroup1 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path Start 1", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup2 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path Start 2", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup3 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path Start 3", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup4 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path End 1", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup5 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 1_1", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup6 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 1_2", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup7 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 1_3", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup8 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 2_1", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup9 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 2_2", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup10 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 2_3", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup11 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 3_1", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup12 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 3_2", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup13 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 3_3", new PathConstraints(4, 3));
     // This is just an example event map. It would be better to have a constant, global event map
-// in your code that will be used by all path following commands.
+  // in your code that will be used by all path following commands.
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("marker1", new PrintCommand("Passed marker 1"));
 
@@ -171,9 +184,72 @@ public class RobotContainer {
         m_robotDrive // The drive subsystem. Used to properly set the requirements of path following commands
     );
 
-    Command fullAuto = autoBuilder.fullAuto(pathGroup);
+    //Command fullAuto = autoBuilder.fullAuto(pathGroup);
+
+    Command pathStart1 = autoBuilder.fullAuto(pathGroup1);
+    Command pathStart2 = autoBuilder.fullAuto(pathGroup2);
+    Command pathStart3 = autoBuilder.fullAuto(pathGroup3);
+    Command pathEnd1 = autoBuilder.fullAuto(pathGroup4);
+    Command cubePath1_1 = autoBuilder.fullAuto(pathGroup5);
+    Command cubePath1_2 = autoBuilder.fullAuto(pathGroup6);
+    Command cubePath1_3 = autoBuilder.fullAuto(pathGroup7);
+    Command cubePath2_1 = autoBuilder.fullAuto(pathGroup8);
+    Command cubePath2_2 = autoBuilder.fullAuto(pathGroup9);
+    Command cubePath2_3 = autoBuilder.fullAuto(pathGroup10);
+    Command cubePath3_1 = autoBuilder.fullAuto(pathGroup11);
+    Command cubePath3_2 = autoBuilder.fullAuto(pathGroup12);
+    Command cubePath3_3 = autoBuilder.fullAuto(pathGroup13);
 
     // Run path following command, then stop at the end.
-    return fullAuto.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    //return fullAuto.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    if (DriverStation.getLocation() == 1)
+    {
+      System.out.println("Starting Path 1");
+      return new CloseClaw(m_Claw).withTimeout(0.5)
+      .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm))
+      .andThen(cubePath1_1
+      .andThen(new OpenClaw(m_Claw).withTimeout(0.5))      
+      .andThen(cubePath1_2
+      .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm))
+      .andThen(cubePath1_3
+      .andThen(pathEnd1
+      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(()-> m_robotDrive.drive(0, 0, 0, false
+      )))))));
+    }
+    else if (DriverStation.getLocation() == 2)
+    {
+      System.out.println("Starting Path 2");
+      return new CloseClaw(m_Claw).withTimeout(0.5)
+      .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm))
+      .andThen(cubePath2_1
+      .andThen(new OpenClaw(m_Claw).withTimeout(0.5))
+      .andThen(cubePath2_2
+      .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm))
+      .andThen(cubePath2_3
+      .andThen(pathEnd1
+      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(()-> m_robotDrive.drive(0, 0, 0, false
+      )))))));
+    }
+    else if (DriverStation.getLocation() == 3)
+    {
+      System.out.println("Starting Path 3");
+      return new CloseClaw(m_Claw).withTimeout(0.5)
+      .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm))
+      .andThen(cubePath3_1
+      .andThen(new OpenClaw(m_Claw).withTimeout(0.5))
+      .andThen(cubePath3_2
+      .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm))
+      .andThen(cubePath3_3
+      .andThen(pathEnd1
+      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(()-> m_robotDrive.drive(0, 0, 0, false 
+      )))))));
+    }
+    else
+    {
+      return new WaitCommand(0);
+    }
   }
 }
