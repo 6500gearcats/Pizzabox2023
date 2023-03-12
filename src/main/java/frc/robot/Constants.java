@@ -167,8 +167,8 @@ public final class Constants {
     public static final int kOpen = 0;
     public static final int kClose = 0;
     //speeds (claw is reversed)
-    public static final double kClawReverseSpeed = 0.6;
-    public static final double kClawForwardSpeed = -0.6;
+    public static final double kClawReverseSpeed = 0.4;
+    public static final double kClawForwardSpeed = -0.4;
     public static final double kClawForwardMaxSpeed = -0.9;
     public static final double kClawReverseMaxSpeed = 0.9;
 
