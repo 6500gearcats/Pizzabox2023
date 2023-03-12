@@ -15,6 +15,7 @@ public class GetOnPlatform extends CommandBase{
     public GetOnPlatform(DriveSubsystem drive, Gyro gyro){
         m_drive = drive;
         m_gyro = gyro;
+        System.out.println("Got on the platform.");
     }
 
     @Override
