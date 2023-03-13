@@ -4,38 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.*;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Gyro;
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.DriverStation;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +13,46 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmDown;
+import frc.robot.commands.ArmDownWithSpeed;
+import frc.robot.commands.ArmNormal;
+import frc.robot.commands.ArmSlow;
+import frc.robot.commands.ArmUp;
+import frc.robot.commands.ArmUpWithSpeed;
+import frc.robot.commands.ClawDown;
+import frc.robot.commands.ClawDownWithSpeed;
+import frc.robot.commands.ClawNormal;
+import frc.robot.commands.ClawSlow;
+import frc.robot.commands.ClawUp;
+import frc.robot.commands.ClawUpWithSpeed;
+import frc.robot.commands.ClimbPlatform;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.DriveNormal;
+import frc.robot.commands.DriveSlow;
+import frc.robot.commands.LightPurple;
+import frc.robot.commands.LightYellow;
+import frc.robot.commands.MoveArmToPosition;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.StopArm;
+import frc.robot.commands.StowArm;
+import frc.robot.commands.ToFloor;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Gyro;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -116,15 +123,22 @@ public class RobotContainer {
     //new Trigger(() -> m_gunnerController.getLeftY() > 0).whileTrue(new ArmUpWithSpeed(m_Arm, (ArmConstants.kArmForwardMaxSpeed * m_gunnerController.getLeftY())));
     //sets the left stick to move arm down, increasing in speed with how far the joystick is pushed
     //new Trigger(() -> m_gunnerController.getLeftY() < 0).whileTrue(new ArmDownWithSpeed(m_Arm, (ArmConstants.kArmReverseMaxSpeed * m_gunnerController.getLeftY())));
+
+    //Makes the arm move slow when the left bumper is pressed
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).whileTrue(new ArmSlow(m_Arm));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new ArmNormal(m_Arm));
+    //Makes the claw move slaw when the right bumper is pressed
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).whileTrue(new ClawSlow(m_Claw));
+    new JoystickButton(m_driverController, Button.kRightBumper.value).onFalse(new ClawNormal(m_Claw));
   
     //sets left stick to arm up or down at constant speed
-    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUp(m_Arm));
-    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDown(m_Arm));
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.4));
+    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.4));
 
     //sets the right stick to move claw up, at a constand speed
-    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUp(m_Claw));
+    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, -0.2));
     //sets the right stick to move claw down, at a constant speed
-    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDown(m_Claw));
+    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDownWithSpeed(m_Claw, 0.2));
     //sets claw open to right button and claw close to left button
     new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
     new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
