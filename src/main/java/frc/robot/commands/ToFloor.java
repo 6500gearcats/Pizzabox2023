@@ -6,12 +6,12 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
-public class FloorPosition extends CommandBase {
+public class ToFloor extends CommandBase {
     
     private final Arm m_ArmSystem;
     private final Claw m_ClawSystem;
 
-    public FloorPosition(Arm theArm, Claw theClaw) {
+    public ToFloor(Arm theArm, Claw theClaw) {
         m_ArmSystem = theArm;
         m_ClawSystem = theClaw;
     }
@@ -37,13 +37,21 @@ public class FloorPosition extends CommandBase {
     }
 
     @Override
+    public void execute() {
+        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle - 0.03 && m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle + 0.03 ) {
+            m_ArmSystem.stopArm();
+        }
+        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawFloorAngle - 0.03 && m_ClawSystem.getClawAngle() < ClawConstants.kClawFloorAngle + 0.03) {
+            m_ClawSystem.stopClawTilt();
+        }
+    }
+
+    @Override
     public boolean isFinished() {
-        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmFloorAngle && m_ClawSystem.getClawAngle() == ClawConstants.kClawFloorAngle) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return m_ArmSystem.getArmAngle() > ArmConstants.kArmFloorAngle - 0.03
+               && m_ArmSystem.getArmAngle() < ArmConstants.kArmFloorAngle + 0.03 
+               && m_ClawSystem.getClawAngle() > ClawConstants.kClawFloorAngle - 0.03 
+               && m_ClawSystem.getClawAngle() < ClawConstants.kClawFloorAngle + 0.03;
     }
     
     @Override

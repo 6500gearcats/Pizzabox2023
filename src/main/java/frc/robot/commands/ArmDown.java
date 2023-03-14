@@ -9,6 +9,12 @@ public class ArmDown extends CommandBase{
 
     public ArmDown(Arm theArm) {
         m_ArmSystem = theArm;
+        addRequirements(m_ArmSystem);
+    }
+
+    @Override
+    public void initialize() {
+        m_ArmSystem.resetFilter();
     }
 
     @Override
@@ -16,8 +22,13 @@ public class ArmDown extends CommandBase{
         m_ArmSystem.armDown();
     }
 
+    @Override
     public void end(boolean done) {
         m_ArmSystem.stopArm();
     }
 
+    @Override
+    public boolean isFinished() {
+        return m_ArmSystem.LimitSwitchPressed();
+    }
 }

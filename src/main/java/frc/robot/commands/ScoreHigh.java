@@ -6,18 +6,18 @@ import frc.robot.Constants.ClawConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 
-public class ScoreHighPosition extends CommandBase {
+public class ScoreHigh extends CommandBase {
     
     private final Arm m_ArmSystem;
     private final Claw m_ClawSystem;
 
-    public ScoreHighPosition(Arm theArm, Claw theClaw) {
+    public ScoreHigh(Arm theArm, Claw theClaw) {
         m_ArmSystem = theArm;
         m_ClawSystem = theClaw;
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         if(m_ArmSystem.getArmAngle() > ArmConstants.kArmHighAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngle) {
             m_ArmSystem.armDown();
             m_ClawSystem.clawDown();
@@ -36,15 +36,23 @@ public class ScoreHighPosition extends CommandBase {
         }
     }
 
-    /*@Override
+    @Override
+    public void execute() {
+        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmHighAngle - 0.03 && m_ArmSystem.getArmAngle() < ArmConstants.kArmHighAngle + 0.03 ) {
+            m_ArmSystem.stopArm();
+        }
+        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngle - 0.03 && m_ClawSystem.getClawAngle() < ClawConstants.kClawHighAngle + 0.03) {
+            m_ClawSystem.stopClawTilt();
+        }
+    }
+
+    @Override
     public boolean isFinished() {
-        if(m_ArmSystem.getArmAngle() == ArmConstants.kArmHighAngle && m_ClawSystem.getClawAngle() == ClawConstants.kClawHighAngle) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }*/
+        return m_ArmSystem.getArmAngle() > ArmConstants.kArmHighAngle - 0.03
+               && m_ArmSystem.getArmAngle() < ArmConstants.kArmHighAngle + 0.03 
+               && m_ClawSystem.getClawAngle() > ClawConstants.kClawHighAngle - 0.03 
+               && m_ClawSystem.getClawAngle() < ClawConstants.kClawHighAngle + 0.03;
+    }
     
     @Override
     public void end(boolean done) {
