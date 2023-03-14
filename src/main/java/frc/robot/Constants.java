@@ -27,12 +27,12 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 2; //4.8
+    public static final double kMaxSpeedMetersPerSecond = 3; //4.8
     public static final double kSlowSpeedMetersPerSecond = 1.5; //2.25
     public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second (was 2)
 
     //slow mode
-    public static final double kSlowModeModifier = 3.0/7.0; //3/4
+    public static final double kSlowModeModifier = 2.0/7.0; //3/4
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);
@@ -153,12 +153,12 @@ public final class Constants {
     
     //not set right
     //encoder values
-    public static final double kEncoderUpperThreshold = 0.2;
-    public static final double kArmStowAngle = 0;
+    public static final double kEncoderUpperThreshold = 0.30;
+    public static final double kArmStowAngle = 0.8;
     public static final double kArmFloorAngle = 0;
     public static final double kArmHighAngle = 0.315; //good
     public static final double kArmMidAngle = 0.37; //good
-    public static final double kArmLowAngle = 0;
+    public static final double kArmLowAngle = 0.70;
   }
 
   public static final class ClawConstants {
@@ -167,8 +167,8 @@ public final class Constants {
     public static final int kOpen = 0;
     public static final int kClose = 0;
     //speeds (claw is reversed)
-    public static final double kClawReverseSpeed = 0.6;
-    public static final double kClawForwardSpeed = -0.6;
+    public static final double kClawReverseSpeed = 0.4;
+    public static final double kClawForwardSpeed = -0.4;
     public static final double kClawForwardMaxSpeed = -0.9;
     public static final double kClawReverseMaxSpeed = 0.9;
 
@@ -183,4 +183,8 @@ public final class Constants {
     public static final double kClawUpperLimit = 0.815; //good
   }
 
+  public static final class GyroConstants{
+    public static final double kTiltPitch = 65; //11? tilt angle=
+    public static final double kPlatformLevel = 85;
+  }
 }
