@@ -163,8 +163,8 @@ public class DriveSubsystem extends SubsystemBase {
     
     if(turboEnable)
     {
-      xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond * DriveConstants.kTurboModeModifier;
-      ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond * DriveConstants.kTurboModeModifier;
+      xSpeed *= DriveConstants.kTurboModeModifier;
+      ySpeed *= DriveConstants.kTurboModeModifier;
       System.out.println("here" + xSpeed + ySpeed);
     }
 
