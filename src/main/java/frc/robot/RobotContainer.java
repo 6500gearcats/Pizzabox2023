@@ -150,6 +150,9 @@ public class RobotContainer {
     //stops arm and claw with x
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StopArm(m_Arm, m_Claw));
 
+  
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive, m_Gyro));
+
   }
 
   /**
