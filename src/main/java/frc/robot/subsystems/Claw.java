@@ -14,19 +14,20 @@ import frc.robot.Constants.ClawConstants;
 public class Claw extends SubsystemBase{
     
     private final MotorController m_clawTiltMotor = new CANSparkMax(ClawConstants.kClawMotorPort, MotorType.kBrushless);
-    private final DoubleSolenoid m_clawMotor = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    private final DoubleSolenoid m_clawMotor = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
     private final DutyCycleEncoder m_clawTiltEncoder = new DutyCycleEncoder(1);
     private double ClawPosition;
 
     public Claw() {
         //m_clawTiltEncoder.reset();
     }
-
     @Override
     public void periodic() {
         ClawPosition = m_clawTiltEncoder.getAbsolutePosition();
 
+
         SmartDashboard.putNumber("Claw Encoder:", ClawPosition);
+        SmartDashboard.putString("clawSolonoid", m_clawMotor.get().toString());
     }
 
     public double getClawAngle() {
