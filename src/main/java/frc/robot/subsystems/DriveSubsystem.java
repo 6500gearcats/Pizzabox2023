@@ -163,11 +163,19 @@ public class DriveSubsystem extends SubsystemBase {
     
     if(turboEnable)
     {
-      xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-      ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+      xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond * DriveConstants.kTurboModeModifier;
+      ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond * DriveConstants.kTurboModeModifier;
       System.out.println("here" + xSpeed + ySpeed);
     }
-  
+
+    // Alternate if above does not work
+    /*if(turboEnable)
+    *{
+    *  xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    *  ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    *  System.out.println("here" + xSpeed + ySpeed);
+    *}
+    */
    
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
