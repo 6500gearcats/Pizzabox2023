@@ -111,8 +111,8 @@ public class RobotContainer {
             m_robotDrive));
 
     //DRIVER CONTROLLER
-    //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/7)
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveSlow(m_robotDrive));
+    //while left button is pressed, speed is modified by the turbo mode modifier constant 
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveTurbo(m_robotDrive));
     new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
     //Turn on lights: Yellow = Back,     Purple = Start
     new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new LightYellow());
