@@ -143,6 +143,6 @@ public final class Constants {
     public static final double kXVariability = 0;
     public static final double kYVariability = 0;
     public static final double kOmegaVariability = 0;
-    public static final String kCamName = "top camera";
+    public static final String kCamName = "top cam";
   }
 }

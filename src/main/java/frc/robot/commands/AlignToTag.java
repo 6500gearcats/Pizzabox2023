@@ -99,7 +99,7 @@ public class AlignToTag extends CommandBase {
         }*/
 
         //dont even know what this does at this point
-        var targetOpt = camResult.getTargets().stream().findFirst();//.filter(t -> t.getFiducialId() == alignTag).filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() <= .2).findFirst();
+        var targetOpt = camResult.getTargets().stream().findFirst().filter(t -> t.getFiducialId() == alignTag).filter(t -> !t.equals(lastTarget));//.filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() <= .2).findFirst();
 
         if(targetOpt.isPresent()) {
             //setting the target we've seen to the current focused target
