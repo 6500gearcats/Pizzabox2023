@@ -131,4 +131,8 @@ public class Gyro extends SubsystemBase {
         return ahrs.getPitch();
     }
 
+    public double getAngle() {
+        return ahrs.getAngle();
+    }
+
 }

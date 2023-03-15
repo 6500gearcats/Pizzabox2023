@@ -148,10 +148,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
- 
-  
-  
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
@@ -167,7 +165,6 @@ public class DriveSubsystem extends SubsystemBase {
       ySpeed *= DriveConstants.kTurboModeModifier;
       System.out.println("here" + xSpeed + ySpeed);
     }
-
    
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
@@ -179,10 +176,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
-
-
   }
-  
+
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
