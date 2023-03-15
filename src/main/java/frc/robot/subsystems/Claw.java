@@ -1,21 +1,26 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ClawConstants;
 
 public class Claw extends SubsystemBase{
+     public boolean slowClaw = false;
     
     private final MotorController m_clawTiltMotor = new CANSparkMax(ClawConstants.kClawMotorPort, MotorType.kBrushless);
     private final DoubleSolenoid m_clawMotor = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 0);
     private final DutyCycleEncoder m_clawTiltEncoder = new DutyCycleEncoder(1);
+    private final SlewRateLimiter clawFilter = new SlewRateLimiter(0.6);
     private double ClawPosition;
 
     public Claw() {
@@ -53,10 +58,27 @@ public class Claw extends SubsystemBase{
     public void clawUp() {
         m_clawTiltMotor.set(ClawConstants.kClawForwardSpeed);
     }
+    
+    public void clawUpSpeed(double speed) {
+        if(slowClaw)
+        {
+          speed *= ClawConstants.kSlowClawModifier;
+        }
+        m_clawTiltMotor.set(clawFilter.calculate(speed));
+      }
 
     public void clawDown() {
         m_clawTiltMotor.set(ClawConstants.kClawReverseSpeed);
     }
+
+    public void clawDownSpeed(double speed) {
+        if(slowClaw)
+        {
+          speed *= ClawConstants.kSlowClawModifier;
+        }
+        m_clawTiltMotor.set(clawFilter.calculate(speed));
+      }
+  
 
     public void stopClawTilt() {
         m_clawTiltMotor.stopMotor();

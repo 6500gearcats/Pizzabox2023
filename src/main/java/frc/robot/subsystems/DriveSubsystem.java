@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
-  public boolean slowEnable = false;
+  public boolean turboEnable = false;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -207,20 +207,22 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
-    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-
+    xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+    ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+    
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
-    // xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
-    // ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
-
-    if (slowEnable) {
-      xSpeed *= DriveConstants.kSlowModeModifier;
-      ySpeed *= DriveConstants.kSlowModeModifier;
+    //xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
+    //ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
+    
+    if(turboEnable)
+    {
+      xSpeed *= DriveConstants.kTurboModeModifier;
+      ySpeed *= DriveConstants.kTurboModeModifier;
       System.out.println("here" + xSpeed + ySpeed);
     }
-
+  
+   
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))

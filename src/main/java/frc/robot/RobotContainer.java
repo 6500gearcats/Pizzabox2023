@@ -4,22 +4,18 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import com.pathplanner.lib.PathConstraints; import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
@@ -29,22 +25,14 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.DriverStation;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -103,8 +91,8 @@ public class RobotContainer {
             m_robotDrive));
 
     //DRIVER CONTROLLER
-    //while left button is pressed, speed is modified by the slow mode modifier constant (currently 3/7)
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveSlow(m_robotDrive));
+    //while left button is pressed, speed is modified by the turbo mode modifier constant 
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveTurbo(m_robotDrive));
     new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
     //Turn on lights: Yellow = Back,     Purple = Start
     new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new LightYellow());
@@ -115,15 +103,22 @@ public class RobotContainer {
     //new Trigger(() -> m_gunnerController.getLeftY() > 0).whileTrue(new ArmUpWithSpeed(m_Arm, (ArmConstants.kArmForwardMaxSpeed * m_gunnerController.getLeftY())));
     //sets the left stick to move arm down, increasing in speed with how far the joystick is pushed
     //new Trigger(() -> m_gunnerController.getLeftY() < 0).whileTrue(new ArmDownWithSpeed(m_Arm, (ArmConstants.kArmReverseMaxSpeed * m_gunnerController.getLeftY())));
+
+    //Makes the arm move slow when the left bumper is pressed
+    new JoystickButton(m_gunnerController, Button.kLeftBumper.value).whileTrue(new ArmSlow(m_Arm));
+    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new ArmNormal(m_Arm));
+    //Makes the claw move slaw when the right bumper is pressed
+    new JoystickButton(m_gunnerController, Button.kRightBumper.value).whileTrue(new ClawSlow(m_Claw));
+    new JoystickButton(m_driverController, Button.kRightBumper.value).onFalse(new ClawNormal(m_Claw));
   
     //sets left stick to arm up or down at constant speed
-    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUp(m_Arm));
-    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDown(m_Arm));
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.4));
+    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.4));
 
     //sets the right stick to move claw up, at a constand speed
-    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUp(m_Claw));
+    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, -0.2));
     //sets the right stick to move claw down, at a constant speed
-    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDown(m_Claw));
+    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDownWithSpeed(m_Claw, 0.2));
     //sets claw open to right button and claw close to left button
     new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
     new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
@@ -188,9 +183,9 @@ public class RobotContainer {
 
     //Command fullAuto = autoBuilder.fullAuto(pathGroup);
 
-    Command pathStart1 = autoBuilder.fullAuto(pathGroup1);
-    Command pathStart2 = autoBuilder.fullAuto(pathGroup2);
-    Command pathStart3 = autoBuilder.fullAuto(pathGroup3);
+    // Command pathStart1 = autoBuilder.fullAuto(pathGroup1);
+    // Command pathStart2 = autoBuilder.fullAuto(pathGroup2);
+    // Command pathStart3 = autoBuilder.fullAuto(pathGroup3);
     Command pathEnd1 = autoBuilder.fullAuto(pathGroup4);
     Command cubePath1_1 = autoBuilder.fullAuto(pathGroup5);
     Command cubePath1_2 = autoBuilder.fullAuto(pathGroup6);

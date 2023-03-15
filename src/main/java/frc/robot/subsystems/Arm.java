@@ -18,6 +18,8 @@ import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
 
+    public boolean slowArm;
+
     // Create the arm tilter motor and claw tilter motor
     // The constants are not corect right now, will be replaced.
 
@@ -68,6 +70,7 @@ public class Arm extends SubsystemBase {
 
     //same method that takes in a speed to be used instead of our constant, useful in the ArmUp command
     public void armUpSpeed(double speed) {
+        if (slowArm) speed *= ArmConstants.kArmSlowModifier;
         m_tiltMotor.set(armFilter.calculate(speed));
     }
 
@@ -78,6 +81,7 @@ public class Arm extends SubsystemBase {
 
     //same method that takes in a speed to be used instead of our constant, useful in the ArmDown command
     public void armDownSpeed(double speed) {
+        if (slowArm) speed *= ArmConstants.kArmSlowModifier;
         m_tiltMotor.set(speed);
     }
 
