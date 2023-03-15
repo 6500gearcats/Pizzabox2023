@@ -4,6 +4,11 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.hal.SimBoolean;
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -12,12 +17,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
+//import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
   public boolean slowEnable = false;
@@ -44,7 +52,14 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private AHRS m_gyro;
+
+  private int m_gyroSim;
+  private SimDouble m_simAngle;
+  private SimBoolean m_connected;
+  private SimBoolean m_calibrating;
+
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
@@ -56,15 +71,39 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
 
+    try {
+      /* Communicate w/navX-MXP via the MXP SPI Bus. */
+      /* Alternatively: I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB */
+      /*
+       * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
+       * details.
+       */
+      m_gyro = new AHRS(SPI.Port.kMXP);
+      System.out.println("AHRS constructed");
+    } catch (RuntimeException ex) {
+      System.out.println("AHRS not constructed");
+      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+    }
+
+    if (RobotBase.isSimulation()) {
+      m_gyroSim  = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+      m_simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Yaw"));
+      m_connected = new SimBoolean(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Connected"));
+      m_calibrating = new SimBoolean(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Calibrating"));
+      m_connected.set(true);
+      m_calibrating.set(false);
+      SmartDashboard.putNumber(getName(), getPitch());
+    }
+
     m_odometry = new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(m_gyro.getAngle()),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      }, new Pose2d(2.0, 5.0, new Rotation2d()));
+        DriveConstants.kDriveKinematics,
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+        }, new Pose2d(2.0, 5.0, new Rotation2d()));
 
     m_simOdometryPose = m_odometry.getPoseMeters();
     SmartDashboard.putData("Field", m_field);
@@ -76,6 +115,21 @@ public class DriveSubsystem extends SubsystemBase {
     updateOdometry();
 
     m_field.setRobotPose(m_simOdometryPose);
+
+    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("NavX Yaw angle", m_gyro.getAngle());
+
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // Update the odometry in the periodic block
+
+    //angle.set(5.0);
+    double angle = getPose().getRotation().getDegrees() * -1;
+    SmartDashboard.putNumber(getName() + " angle", angle);
+    m_simAngle.set(angle);
+
 
   }
 
@@ -107,10 +161,13 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         },
         pose);
+
+        m_simOdometryPose = pose;
   }
 
   /**
-   * Updates the odometry of the robot using the swerve module states and the gyro reading. Should
+   * Updates the odometry of the robot using the swerve module states and the gyro
+   * reading. Should
    * be run in periodic() or during every code loop to maintain accuracy.
    */
   public void updateOdometry() {
@@ -123,19 +180,18 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         });
 
-
     if (Robot.isSimulation()) {
       SwerveModuleState[] measuredStates =
           new SwerveModuleState[] {
-            m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
-          };
+          m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
+      };
       ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
       m_simOdometryPose =
           m_simOdometryPose.exp(
-              new Twist2d(
-                  speeds.vxMetersPerSecond * .02,
-                  speeds.vyMetersPerSecond * .02,
-                  speeds.omegaRadiansPerSecond * .02));
+          new Twist2d(
+              speeds.vxMetersPerSecond * .02,
+              speeds.vyMetersPerSecond * .02,
+              speeds.omegaRadiansPerSecond * .02));
     }
   }
 
@@ -148,27 +204,23 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
- 
-  
-  
+
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    
+
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
-    //xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
-    //ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
-    
-    if(slowEnable)
-    {
+    // xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
+    // ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
+
+    if (slowEnable) {
       xSpeed *= DriveConstants.kSlowModeModifier;
       ySpeed *= DriveConstants.kSlowModeModifier;
       System.out.println("here" + xSpeed + ySpeed);
     }
-  
-   
+
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
@@ -180,9 +232,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
-
   }
-  
+
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
@@ -237,4 +288,10 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+
+  /* Return the NavX pitch angle */
+  public double getPitch() {
+    return m_gyro.getPitch();
+  }
+
 }

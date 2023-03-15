@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Gyro;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -11,10 +10,8 @@ import frc.robot.Constants.GyroConstants;
 public class FindPlatform extends CommandBase{
 
     private final DriveSubsystem m_drive;
-    private final Gyro m_gyro;
-    public FindPlatform(DriveSubsystem drive, Gyro gyro){
+    public FindPlatform(DriveSubsystem drive){
         m_drive = drive;
-        m_gyro = gyro;
     }
 
     @Override
@@ -24,6 +21,6 @@ public class FindPlatform extends CommandBase{
 
 
     public boolean isFinished(){
-        return (Math.abs(m_gyro.getPitch()) < GyroConstants.kTiltPitch);
+        return (Math.abs(m_drive.getPitch()) < GyroConstants.kTiltPitch);
     }
 }

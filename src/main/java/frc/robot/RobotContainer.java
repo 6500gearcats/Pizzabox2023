@@ -24,7 +24,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Gyro;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,7 +57,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
-  private final Gyro m_Gyro = new Gyro();
+  
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -84,7 +83,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
-                true),
+                m_driverController.getRightBumperPressed()),
             m_robotDrive));
   }
 
@@ -213,7 +212,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath1_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
@@ -228,7 +227,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath2_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
@@ -243,7 +242,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath3_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
