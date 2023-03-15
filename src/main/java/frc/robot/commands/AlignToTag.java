@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -13,10 +14,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.PhotonCameraWrapper;
+//import frc.robot.subsystems.PhotonCameraWrapper;
 
 import java.util.function.Supplier;
 
+import org.ejml.dense.row.misc.TransposeAlgs_CDRM;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -40,7 +42,7 @@ public class AlignToTag extends CommandBase {
 
     //private instance variables
     //private final PhotonCamera photonCamera = new PhotonCamera(VisionConstants.cameraName);
-    private final PhotonCamera camera;
+    private final PhotonCamera camera = new PhotonCamera(VisionConstants.kCamName);
     private final DriveSubsystem driveSubsystem;
     private final Supplier<Pose2d> poseProvider;
 
@@ -53,8 +55,9 @@ public class AlignToTag extends CommandBase {
     private PhotonTrackedTarget lastTarget;
 
     //Constructor
-    public AlignToTag(PhotonCamera cam, DriveSubsystem drive, Supplier<Pose2d> pose) {
-        camera = cam;
+    //public AlignToTag(PhotonCamera cam, DriveSubsystem drive, Supplier<Pose2d> pose) {
+    //    camera = cam;
+    public AlignToTag(DriveSubsystem drive, Supplier<Pose2d> pose) {
         driveSubsystem = drive;
         poseProvider = pose;
 
@@ -96,7 +99,7 @@ public class AlignToTag extends CommandBase {
         }*/
 
         //dont even know what this does at this point
-        var targetOpt = camResult.getTargets().stream().filter(t -> t.getFiducialId() == alignTag).filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() <= .2).findFirst();
+        var targetOpt = camResult.getTargets().stream().findFirst();//.filter(t -> t.getFiducialId() == alignTag).filter(t -> !t.equals(lastTarget) && t.getPoseAmbiguity() <= .2).findFirst();
 
         if(targetOpt.isPresent()) {
             //setting the target we've seen to the current focused target
@@ -105,45 +108,46 @@ public class AlignToTag extends CommandBase {
             lastTarget = target;
 
             //figure out where the camera is
-            var cameraPose = robotPose.transformBy(???);
+            Pose3d cameraPose = robotPose.transformBy(new Transform3d());
 
             //figure out where the target is
-            var camToTarget = target.getBestCameraToTarget();
-            var targetPose = cameraPose.transformBy(camToTarget);
+            Transform3d camToTarget = target.getBestCameraToTarget();
+            Pose3d targetPose = cameraPose.transformBy(camToTarget);
 
             //figure out where we want our robot to go
-            var goalPose = targetPose.transfromBy(PositionToTag).toPose2d();
+            Pose3d goalPose = targetPose.transformBy(PositionToTag);
 
             xController.setGoal(goalPose.getX());
             yController.setGoal(goalPose.getY());
-            omegaController.setGoal(goalPose.getRotation().getRadians());
+            omegaController.setGoal((goalPose.getRotation().getAngle()));
         }
 
         if(lastTarget == null) {
-            driveSubsystem.stop();
+            driveSubsystem.drive(0, 0, 0, true);
         } else {
             var xSpeed = xController.calculate(robotPose.getX());
             if (xController.atGoal()) {
-                xSPeed = 0;
+                xSpeed = 0;
             }
 
             var ySpeed = yController.calculate(robotPose.getY());
             if (yController.atGoal()) {
-                ySPeed = 0;
+                ySpeed = 0;
             }
 
-            var omegaSpeed = omegaController.calculate(robotPose.getRotaiotn().getRadians());
+            var omegaSpeed = omegaController.calculate(robotPose.getRotation().getAngle());
             if (xController.atGoal()) {
-                omegaSPeed = 0;
+                omegaSpeed = 0;
             }
 
-            driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, omegaSpeed, robotPose2d.get()));
+            //driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, omegaSpeed, robotPose2d.getRotation()));
+            driveSubsystem.drive(xSpeed, ySpeed, omegaSpeed, false);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        driveSubsystem.stop();
+        driveSubsystem.drive(0, 0, 0, true);
     }
 
 } 

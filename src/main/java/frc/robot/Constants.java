@@ -134,4 +134,15 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public static final class VisionConstants {
+
+	public static final int kAlignTag = 0;
+    public static final double kInFrontTagDistance = 1;
+    public static final double kSideToSideTagDistance = 0;
+    public static final double kXVariability = 0;
+    public static final double kYVariability = 0;
+    public static final double kOmegaVariability = 0;
+    public static final String kCamName = "top camera";
+  }
 }
