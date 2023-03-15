@@ -15,6 +15,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.*;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -39,7 +46,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Arm m_Arm = new Arm();
   private final Claw m_Claw = new Claw();
-  private final Gyro m_Gyro = new Gyro();
+  
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -65,8 +72,8 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
-                true),
-            m_robotDrive, m_Gyro));
+                m_driverController.getRightBumperPressed()),
+            m_robotDrive));
   }
 
   /**
@@ -133,6 +140,12 @@ public class RobotContainer {
     //sets stow arm to x button
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StowArm(m_Arm, m_Claw));
 
+  
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
+
+  
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
+
   }
 
   /**
@@ -178,9 +191,9 @@ public class RobotContainer {
 
     //Command fullAuto = autoBuilder.fullAuto(pathGroup);
 
-    Command pathStart1 = autoBuilder.fullAuto(pathGroup1);
-    Command pathStart2 = autoBuilder.fullAuto(pathGroup2);
-    Command pathStart3 = autoBuilder.fullAuto(pathGroup3);
+    // Command pathStart1 = autoBuilder.fullAuto(pathGroup1);
+    // Command pathStart2 = autoBuilder.fullAuto(pathGroup2);
+    // Command pathStart3 = autoBuilder.fullAuto(pathGroup3);
     Command pathEnd1 = autoBuilder.fullAuto(pathGroup4);
     Command cubePath1_1 = autoBuilder.fullAuto(pathGroup5);
     Command cubePath1_2 = autoBuilder.fullAuto(pathGroup6);
@@ -205,7 +218,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath1_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
@@ -220,7 +233,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath2_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
@@ -235,7 +248,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath3_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive, m_Gyro)
+      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
