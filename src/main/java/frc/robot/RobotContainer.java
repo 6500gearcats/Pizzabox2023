@@ -6,9 +6,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathConstraints; import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
@@ -26,33 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmDown;
-import frc.robot.commands.ArmDownWithSpeed;
-import frc.robot.commands.ArmNormal;
-import frc.robot.commands.ArmSlow;
-import frc.robot.commands.ArmUp;
-import frc.robot.commands.ArmUpWithSpeed;
-import frc.robot.commands.ClawDown;
-import frc.robot.commands.ClawDownWithSpeed;
-import frc.robot.commands.ClawNormal;
-import frc.robot.commands.ClawSlow;
-import frc.robot.commands.ClawUp;
-import frc.robot.commands.ClawUpWithSpeed;
-import frc.robot.commands.ClimbPlatform;
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.DriveNormal;
-import frc.robot.commands.DriveSlow;
-import frc.robot.commands.LightPurple;
-import frc.robot.commands.LightYellow;
-import frc.robot.commands.MoveArmToPosition;
-import frc.robot.commands.OpenClaw;
-import frc.robot.commands.StopArm;
-import frc.robot.commands.StowArm;
-import frc.robot.commands.ToFloor;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Gyro;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a

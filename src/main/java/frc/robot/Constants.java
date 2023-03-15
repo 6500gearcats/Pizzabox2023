@@ -33,8 +33,6 @@ public final class Constants {
 
     //turbo
     public static final double kTurboModeModifier = 7.0/2.0;
-    //slow mode
-    //public static final double kSlowModeModifier = 2.0/7.0; //3/4
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);
@@ -152,6 +150,9 @@ public final class Constants {
     public static final double kArmForwardSpeed = -0.4;
     public static final double kArmForwardMaxSpeed = 0.9;
     public static final double kArmReverseMaxSpeed = -0.9;
+
+    // TODO tune
+    public static final double kArmSlowModifier = 2.0 / 7.0;
     
     //not set right
     //encoder values
@@ -173,6 +174,9 @@ public final class Constants {
     public static final double kClawForwardSpeed = -0.4;
     public static final double kClawForwardMaxSpeed = -0.9;
     public static final double kClawReverseMaxSpeed = 0.9;
+
+    // TODO tune
+    public static final double kSlowClawModifier = 2.0 / 7.0;
 
     //not set right
     //encoder values
