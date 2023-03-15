@@ -17,13 +17,15 @@ public class GetOnPlatform extends CommandBase{
 
     @Override
     public void execute(){
-        m_drive.drive(0.15, 0, 0, true);
+        double angle = m_drive.getPitch();
+        if(Math.abs(angle) > 1){
+            m_drive.drive(-0.1*(Math.log(Math.abs(angle))*angle/Math.abs(angle)), 0, 0, true);
+        }
     }
 
-
-    public boolean isFinished(){
-        return (Math.abs(m_drive.getPitch()) >= GyroConstants.kPlatformLevel);
-    }
+   // public boolean isFinished(){
+     //   return (Math.abs(m_gyro.getPitch()) <= GyroConstants.kPlatformLevel);
+    //}
 
     public void end() {
         m_drive.drive(0,0,0,true);
