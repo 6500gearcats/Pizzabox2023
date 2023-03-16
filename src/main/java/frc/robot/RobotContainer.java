@@ -86,10 +86,6 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
 
     //DRIVER CONTROLLER
     //while left button is pressed, speed is modified by the turbo mode modifier constant 
@@ -98,6 +94,14 @@ public class RobotContainer {
     //Turn on lights: Yellow = Back,     Purple = Start
     new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new LightYellow());
     new JoystickButton(m_driverController, Button.kStart.value).whileTrue(new LightPurple());
+
+    // Use the automated Platform climb      
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
+
+    // Set the wheels in locked arrangement to prevent movement
+    new JoystickButton(m_driverController, Button.kX.value)
+        .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+
 
     //GUNNER CONTROLLER
     //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
@@ -139,12 +143,6 @@ public class RobotContainer {
     new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmLowAngle, m_Arm));
     //sets stow arm to x button
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StowArm(m_Arm, m_Claw));
-
-  
-    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
-
-  
-    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
 
   }
 
