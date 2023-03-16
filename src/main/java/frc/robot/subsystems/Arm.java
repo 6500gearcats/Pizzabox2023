@@ -18,6 +18,8 @@ import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
 
+    public boolean slowArm;
+
     // Create the arm tilter motor and claw tilter motor
     // The constants are not corect right now, will be replaced.
 
@@ -63,22 +65,40 @@ public class Arm extends SubsystemBase {
 
     //Moves arm up at constant speed
     public void armUp() {
-        m_tiltMotor.set(armFilter.calculate(ArmConstants.kArmForwardSpeed));
+        if ( AtMaxHeight() ) {
+            m_tiltMotor.set(0);
+        } else {
+            m_tiltMotor.set(ArmConstants.kArmForwardSpeed);
+        }
     }
 
     //same method that takes in a speed to be used instead of our constant, useful in the ArmUp command
     public void armUpSpeed(double speed) {
-        m_tiltMotor.set(armFilter.calculate(speed));
+        if (slowArm) speed *= ArmConstants.kArmSlowModifier;
+        if ( AtMaxHeight() ) {
+            m_tiltMotor.set(0);
+        } else {
+            m_tiltMotor.set(armFilter.calculate(speed));
+        }
     }
 
     //Moves arm down at constant speed
     public void armDown() {
-        m_tiltMotor.set(armFilter.calculate(ArmConstants.kArmReverseSpeed));
+        if ( LimitSwitchPressed() ) {
+            m_tiltMotor.set(0);
+        } else {
+            m_tiltMotor.set(ArmConstants.kArmReverseSpeed);
+        }
     }
 
     //same method that takes in a speed to be used instead of our constant, useful in the ArmDown command
     public void armDownSpeed(double speed) {
-        m_tiltMotor.set(speed);
+        if (slowArm) speed *= ArmConstants.kArmSlowModifier;
+        if ( LimitSwitchPressed() ) {
+            m_tiltMotor.set(0);
+        } else {
+            m_tiltMotor.set(speed);
+        }
     }
 
     //returns true if lower limit switch is pressed

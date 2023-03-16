@@ -27,14 +27,12 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 3; //3
+    public static final double kMaxSpeedMetersPerSecond = 3.5; //3
     public static final double kNormalSpeedMetersPerSecond = 0.85; //1.5
-    public static final double kMaxAngularSpeed = 0.5 * Math.PI; // radians per second (was 2)
+    public static final double kMaxAngularSpeed = 0.75 * Math.PI; // radians per second (was 2)
 
     //turbo
     public static final double kTurboModeModifier = 7.0/2.0;
-    //slow mode
-    //public static final double kSlowModeModifier = 2.0/7.0; //3/4
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(23.0);
@@ -152,6 +150,9 @@ public final class Constants {
     public static final double kArmForwardSpeed = -0.4;
     public static final double kArmForwardMaxSpeed = 0.9;
     public static final double kArmReverseMaxSpeed = -0.9;
+
+    // TODO tune
+    public static final double kArmSlowModifier = 2.0 / 7.0;
     
     //not set right
     //encoder values
@@ -174,6 +175,9 @@ public final class Constants {
     public static final double kClawForwardMaxSpeed = -0.9;
     public static final double kClawReverseMaxSpeed = 0.9;
 
+    // TODO tune
+    public static final double kSlowClawModifier = 2.0 / 7.0;
+
     //not set right
     //encoder values
     public static final double kClawStowAngle = 0.5; //good
@@ -183,10 +187,11 @@ public final class Constants {
     public static final double kClawLowAngle = 0.67; //probably same as high
     public static final double kClawLowerLimit = 0.27; //good
     public static final double kClawUpperLimit = 0.815; //good
+    public static final double kClawTolerance = 0.01; //good
   }
 
   public static final class GyroConstants{
     public static final double kTiltPitch = 65; //11? tilt angle=
-    public static final double kPlatformLevel = 85;
+    public static final double kPlatformLevel = 10;
   }
 }

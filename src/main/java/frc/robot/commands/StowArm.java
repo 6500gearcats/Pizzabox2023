@@ -18,22 +18,12 @@ public class StowArm extends CommandBase {
 
     @Override
     public void initialize() {
-        if(m_ArmSystem.getArmAngle() > ArmConstants.kArmStowAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle) {
-            m_ArmSystem.armDown();
+        m_ArmSystem.armDown();
+
+        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle)
             m_ClawSystem.clawDown();
-        }
-        else if(m_ArmSystem.getArmAngle() > ArmConstants.kArmStowAngle && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle){
-            m_ArmSystem.armDown();
+        else
             m_ClawSystem.clawUp();
-        }
-        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmStowAngle && m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle) {
-            m_ArmSystem.armUp();
-            m_ClawSystem.clawDown();
-        }
-        else if(m_ArmSystem.getArmAngle() < ArmConstants.kArmStowAngle && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle) {
-            m_ArmSystem.armUp();
-            m_ClawSystem.clawUp();
-        }
     }
 
     @Override
@@ -41,14 +31,14 @@ public class StowArm extends CommandBase {
         if(m_ArmSystem.LimitSwitchPressed()) {
             m_ArmSystem.stopArm();
         }
-        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - 0.03 && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + 0.03) {
+        if(m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - ClawConstants.kClawTolerance && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + ClawConstants.kClawTolerance) {
             m_ClawSystem.stopClawTilt();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return m_ArmSystem.LimitSwitchPressed() && m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - 0.03 && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + 0.03;
+        return m_ArmSystem.LimitSwitchPressed() && m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle - ClawConstants.kClawTolerance && m_ClawSystem.getClawAngle() < ClawConstants.kClawStowAngle + ClawConstants.kClawTolerance;
     }
     
     @Override
