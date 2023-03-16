@@ -59,6 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
   private SimDouble m_simAngle;
   private SimBoolean m_connected;
   private SimBoolean m_calibrating;
+  private boolean m_fieldOriented;
 
 
   // Odometry class for tracking robot pose
@@ -114,10 +115,13 @@ public class DriveSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block
     updateOdometry();
 
-    m_field.setRobotPose(m_simOdometryPose);
+    //m_field.setRobotPose(m_simOdometryPose);
+    m_field.setRobotPose(m_odometry.getPoseMeters());
 
     SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
     SmartDashboard.putNumber("NavX Yaw angle", m_gyro.getAngle());
+
+    SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
   }
 
@@ -206,6 +210,8 @@ public class DriveSubsystem extends SubsystemBase {
    */
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
+    m_fieldOriented = fieldRelative;
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
@@ -294,6 +300,11 @@ public class DriveSubsystem extends SubsystemBase {
   /* Return the NavX pitch angle */
   public double getPitch() {
     return m_gyro.getPitch();
+  }
+
+  public boolean toggleFieldOriented() {
+    m_fieldOriented = !m_fieldOriented;
+    return m_fieldOriented;
   }
 
 }
