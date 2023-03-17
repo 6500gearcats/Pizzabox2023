@@ -35,9 +35,9 @@ public final class Constants {
     public static final double kTurboModeModifier = 7.0/2.0;
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(23.0);
+    public static final double kTrackWidth = Units.inchesToMeters(28.0);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(28.0);
+    public static final double kWheelBase = Units.inchesToMeters(23.0);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -46,21 +46,21 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-    public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    public static final double kFrontLeftChassisAngularOffset = -0.88;
+    public static final double kFrontRightChassisAngularOffset = 0.88;
+    public static final double kBackLeftChassisAngularOffset = Math.PI + 0.88;
+    public static final double kBackRightChassisAngularOffset = Math.PI - 0.88;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 2;
-    public static final int kRearLeftDrivingCanId = 1;
-    public static final int kFrontRightDrivingCanId = 3;
-    public static final int kRearRightDrivingCanId = 4;
+    public static final int kFrontLeftDrivingCanId = 1;
+    public static final int kRearLeftDrivingCanId = 4;
+    public static final int kFrontRightDrivingCanId = 2;
+    public static final int kRearRightDrivingCanId = 3;
 
-    public static final int kFrontLeftTurningCanId = 6;
-    public static final int kRearLeftTurningCanId = 5;
-    public static final int kFrontRightTurningCanId = 7;
-    public static final int kRearRightTurningCanId = 8;
+    public static final int kFrontLeftTurningCanId = 5;
+    public static final int kRearLeftTurningCanId = 8;
+    public static final int kFrontRightTurningCanId = 6;
+    public static final int kRearRightTurningCanId = 7;
 
     public static final boolean kGyroReversed = false;
   }
