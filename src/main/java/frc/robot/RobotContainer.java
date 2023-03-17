@@ -205,19 +205,22 @@ public class RobotContainer {
     switch (DriverStation.getLocation()){
       case 1:
         System.out.println("Starting Path 1");
-        return new AutoScore(cubePath1_1, cubePath1_2, cubePath1_3, pathEnd1, m_robotDrive, m_Gyro, m_Arm, m_Claw )
+        return new AutoScore(cubePath1_1, cubePath1_2, cubePath1_3, m_robotDrive, m_Gyro, m_Arm, m_Claw )
+          .andThen(pathEnd1)
           .andThen(new ClimbPlatform(m_robotDrive, m_Gyro))
           .andThen(()-> m_robotDrive.drive(0, 0, 0, false));          
       case 2:
           System.out.println("Starting Path 2");
-          return new AutoScore(cubePath2_1, cubePath2_2, cubePath2_3, pathEnd1, m_robotDrive, m_Gyro, m_Arm, m_Claw )
-            .andThen(new ClimbPlatform(m_robotDrive, m_Gyro))
-            .andThen(()-> m_robotDrive.drive(0, 0, 0, false));
+          return new AutoScore(cubePath2_1, cubePath2_2, cubePath2_3, m_robotDrive, m_Gyro, m_Arm, m_Claw )
+          .andThen(pathEnd1)
+          .andThen(new ClimbPlatform(m_robotDrive, m_Gyro))
+          .andThen(()-> m_robotDrive.drive(0, 0, 0, false));
       case 3:
           System.out.println("Starting Path 1");
-          return new AutoScore(cubePath3_1, cubePath3_2, cubePath3_3, pathEnd1, m_robotDrive, m_Gyro, m_Arm, m_Claw )
-            .andThen(new ClimbPlatform(m_robotDrive, m_Gyro))
-            .andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+          return new AutoScore(cubePath3_1, cubePath3_2, cubePath3_3, m_robotDrive, m_Gyro, m_Arm, m_Claw )
+          .andThen(pathEnd1)
+          .andThen(new ClimbPlatform(m_robotDrive, m_Gyro))
+          .andThen(() -> m_robotDrive.drive(0, 0, 0, false));
       default:
     }
             // return new CloseClaw(m_Claw).withTimeout(0.5)

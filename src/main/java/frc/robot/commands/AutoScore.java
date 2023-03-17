@@ -14,7 +14,7 @@ public class AutoScore extends SequentialCommandGroup {
     Command path1, path2, path3, path4;
 
     public AutoScore(
-            Command path1, Command path2, Command path3, Command path4, 
+            Command path1, Command path2, Command path3, 
             DriveSubsystem drive,
             Gyro gyro,
             Arm arm,
@@ -27,7 +27,6 @@ public class AutoScore extends SequentialCommandGroup {
                         .andThen(new OpenClaw(claw).withTimeout(0.5))
                         .andThen(path2)
                         .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, arm)).withTimeout(5.0)
-                        .andThen(path3)
-                        .andThen(path4));
+                        .andThen(path3));
     }
 }
