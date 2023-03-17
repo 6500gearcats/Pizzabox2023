@@ -217,10 +217,8 @@ public class RobotContainer {
       .andThen(cubePath1_2
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath1_3
-      .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))))));
+      )))));
     }
     else if (DriverStation.getLocation() == 2)
     {
@@ -247,10 +245,8 @@ public class RobotContainer {
       .andThen(cubePath3_2
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath3_3
-      .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))))));
+      )))));
     }
     else
     {
