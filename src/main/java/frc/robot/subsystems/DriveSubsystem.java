@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.REVPhysicsSim;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
@@ -115,8 +116,12 @@ public class DriveSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block
     updateOdometry();
 
-    //m_field.setRobotPose(m_simOdometryPose);
-    m_field.setRobotPose(m_odometry.getPoseMeters());
+    if (Robot.isReal()) {
+      m_field.setRobotPose(m_odometry.getPoseMeters());
+    }
+    else{
+      m_field.setRobotPose(m_simOdometryPose);
+    }
 
     SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
     SmartDashboard.putNumber("NavX Yaw angle", m_gyro.getAngle());
@@ -128,6 +133,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // Update the odometry in the periodic block
+    REVPhysicsSim.getInstance().run();
 
     //angle.set(5.0);
     double angle = getPose().getRotation().getDegrees() * -1;
@@ -190,12 +196,19 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
       };
       ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
+
+      Twist2d twist = new Twist2d(
+        speeds.vxMetersPerSecond * .02,
+        speeds.vyMetersPerSecond * .02,
+        speeds.omegaRadiansPerSecond * .02);
+
       m_simOdometryPose =
-          m_simOdometryPose.exp(
-          new Twist2d(
-              speeds.vxMetersPerSecond * .02,
-              speeds.vyMetersPerSecond * .02,
-              speeds.omegaRadiansPerSecond * .02));
+          m_simOdometryPose.exp(twist);
+
+      SmartDashboard.putNumber("new x", twist.dx );
+      SmartDashboard.putNumber("new y ", twist.dy );
+      SmartDashboard.putNumber("new theta ", twist.dtheta );
+
     }
   }
 
