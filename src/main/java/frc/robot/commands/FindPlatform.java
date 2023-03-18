@@ -21,6 +21,6 @@ public class FindPlatform extends CommandBase{
 
 
     public boolean isFinished(){
-        return (Math.abs(m_drive.getPitch()) > 20);
+        return (Math.abs(m_drive.getPitch()) > 15);
     }
 }

@@ -162,6 +162,7 @@ public final class Constants {
     public static final double kArmHighAngle = 0.315; //good
     public static final double kArmMidAngle = 0.37; //good
     public static final double kArmLowAngle = 0.70;
+    public static final double kLoadingStation = 0.36;
   }
 
   public static final class ClawConstants {
@@ -192,10 +193,10 @@ public final class Constants {
 
   public static final class GyroConstants{
     public static final double kTiltPitch = 65; //11? tilt angle=
-    public static final double kPlatformLevel = 10;
+    public static final double kPlatformLevel = 7;
   }
 
   public static final class PlatformConstants {
-    public static final double kPlatformSpeed = 0.1;
+    public static final double kPlatformSpeed = 0.2;
   }
 }
