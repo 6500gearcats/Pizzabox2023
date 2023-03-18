@@ -72,7 +72,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.1), //0.1
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.1), //0.1
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
-                true),
+                !m_driverController.getRightBumper()),
             m_robotDrive));
   }
 
@@ -121,8 +121,8 @@ public class RobotContainer {
       .onFalse(new ClawNormal(m_Claw));
   
     //sets left stick to arm up or down at constant speed
-    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.4));
-    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.4));
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.5));
+    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.5));
 
     //sets the right stick to move claw up, at a constand speed
     new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, -0.2));
