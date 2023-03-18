@@ -10,13 +10,20 @@ import frc.robot.Constants.GyroConstants;
 public class FindPlatform extends CommandBase{
 
     private final DriveSubsystem m_drive;
-    public FindPlatform(DriveSubsystem drive){
+    private boolean forwards;
+    public FindPlatform(DriveSubsystem drive, boolean forward){
         m_drive = drive;
+        forwards = forward;
     }
 
     @Override
     public void execute(){
-        m_drive.drive(0.85, 0, 0, false);
+        if(forwards) {
+            m_drive.drive(0.85, 0, 0, false);
+        }
+        else {
+            m_drive.drive(-.85, 0, 0, false);
+        }
     }
 
 

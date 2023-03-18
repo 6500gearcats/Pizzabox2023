@@ -32,6 +32,6 @@ public class GetOnPlatform extends CommandBase{
     //}
 
     public void end() {
-        m_drive.drive(0,0,0,true);
+        m_drive.drive(0,0,0,false);
     }
 }

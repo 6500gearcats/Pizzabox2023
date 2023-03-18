@@ -96,7 +96,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kStart.value).whileTrue(new LightPurple());
 
     // Use the automated Platform climb      
-    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatformForwards(m_robotDrive));
 
     // Set the wheels in locked arrangement to prevent movement
     new JoystickButton(m_driverController, Button.kX.value)
@@ -234,7 +234,7 @@ public class RobotContainer {
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath2_3
       .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive)
+      .andThen(new ClimbPlatformBackwards(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
       )))))));
     }
