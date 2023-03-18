@@ -197,6 +197,6 @@ public final class Constants {
   }
 
   public static final class PlatformConstants {
-    public static final double kPlatformSpeed = 0.2;
+    public static final double kPlatformSpeed = 0.4;
   }
 }

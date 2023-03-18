@@ -86,12 +86,17 @@ public class Claw extends SubsystemBase{
 
     public void moveTo(double targetAngle) {
         
-        if(getClawAngle() > targetAngle + ClawConstants.kClawTolerance){
-            clawDown();
-        }
-        else if(getClawAngle() < targetAngle - ClawConstants.kClawTolerance){
+        if(getClawAngle() < targetAngle - ClawConstants.kClawTolerance){
             clawUp();
         }
+        else if(getClawAngle() > targetAngle + ClawConstants.kClawTolerance){
+            clawDown();
+        }
+        else{
+            stopClawTilt();
+        }
+        
+        
     }
 
 }
