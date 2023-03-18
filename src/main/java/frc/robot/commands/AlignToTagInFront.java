@@ -93,7 +93,11 @@ public class AlignToTagInFront extends CommandBase {
             var camToTarget = seenTarget.getBestCameraToTarget();
 
             double targetToCamHeight = VisionConstants.kCamHeight - VisionConstants.kTagHeight;
-            double frontToBackToTag;
+            double frontToBackToTag = Math.tan(pitch) * targetToCamHeight;
+            double sideToSideToTag;
+            double turnToTag;
+
+
         }
      }
 
