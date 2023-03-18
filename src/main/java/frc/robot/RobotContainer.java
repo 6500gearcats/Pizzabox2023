@@ -145,7 +145,7 @@ public class RobotContainer {
     //sets score mid to b button
     new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmMidAngle, m_Arm));
     //sets score low to a button
-    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmLowAngle, m_Arm));
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new MoveArmToPosition(ArmConstants.kLoadingStation, m_Arm));
     //sets stow arm to x button
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StowArm(m_Arm, m_Claw));
 

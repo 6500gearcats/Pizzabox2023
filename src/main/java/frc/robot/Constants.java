@@ -162,6 +162,7 @@ public final class Constants {
     public static final double kArmHighAngle = 0.315; //good
     public static final double kArmMidAngle = 0.37; //good
     public static final double kArmLowAngle = 0.70;
+    public static final double kLoadingStation = 0.36;
   }
 
   public static final class ClawConstants {
