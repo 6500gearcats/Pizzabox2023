@@ -16,11 +16,12 @@ public class FindPlatform extends CommandBase{
 
     @Override
     public void execute(){
-        m_drive.drive(0.85, 0, 0, false);
+        m_drive.drive(0.85, 0, 0, true);
     }
 
 
     public boolean isFinished(){
-        return (Math.abs(m_drive.getPitch()) > 15);
+        //need to test and adjust roll boolean
+        return (Math.abs(m_drive.getPitch()) > 15 && Math.abs(m_drive.getRoll()) > 15);
     }
 }

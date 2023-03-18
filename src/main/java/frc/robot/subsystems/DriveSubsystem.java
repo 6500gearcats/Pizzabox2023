@@ -330,6 +330,10 @@ public class DriveSubsystem extends SubsystemBase {
     return -m_gyro.getAngle();
   }
 
+  public double getRoll() {
+    return  m_gyro.getRoll();
+  }
+
 
   public boolean toggleFieldOriented() {
     m_fieldOriented = !m_fieldOriented;

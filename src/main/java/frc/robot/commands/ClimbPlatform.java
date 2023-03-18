@@ -11,7 +11,7 @@ public class ClimbPlatform extends SequentialCommandGroup{
     public ClimbPlatform(DriveSubsystem drive){
         addCommands(
             new FindPlatform(drive),
-            new RunCommand(() -> drive.drive(.8,0,0,false)).withTimeout(0.25),
+            new RunCommand(() -> drive.drive(.8, 0, 0, true)).withTimeout(.25),
             new GetOnPlatform(drive)
         );
     }
