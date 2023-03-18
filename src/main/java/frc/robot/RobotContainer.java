@@ -72,8 +72,9 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06), //0.1
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
-                true),
-            m_robotDrive));
+                (!m_driverController.getRightBumper()),
+                m_driverController.getLeftBumper()),
+                m_robotDrive));
   }
 
   /**
@@ -89,8 +90,8 @@ public class RobotContainer {
 
     //DRIVER CONTROLLER
     //while left button is pressed, speed is modified by the turbo mode modifier constant 
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveTurbo(m_robotDrive));
-    new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
+    //new JoystickButton(m_driverController, Button.kLeftBumper.value).whileTrue(new DriveTurbo(m_robotDrive));
+    //new JoystickButton(m_driverController, Button.kLeftBumper.value).onFalse(new DriveNormal(m_robotDrive));
     //Turn on lights: Yellow = Back,     Purple = Start
     new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new LightYellow());
     new JoystickButton(m_driverController, Button.kStart.value).whileTrue(new LightPurple());

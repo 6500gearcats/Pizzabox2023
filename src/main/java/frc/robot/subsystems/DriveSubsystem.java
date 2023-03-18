@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
-  public boolean turboEnable = false;
+  public boolean m_turboEnable = false;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -229,7 +229,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-
+    m_turboEnable = true;
     m_fieldOriented = fieldRelative;
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
@@ -240,7 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
     //xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     //ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
     
-    if(turboEnable)
+    if(m_turboEnable)
     {
       xSpeed *= DriveConstants.kTurboModeModifier;
       ySpeed *= DriveConstants.kTurboModeModifier;
@@ -261,6 +261,21 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
+
+  /**
+   * Method to drive with optional turbo 
+   * @param xSpeed
+   * @param ySpeed
+   * @param rot
+   * @param fieldRelative
+   * @param turbo
+   */
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean turbo) {
+
+    m_turboEnable = turbo;
+
+    this.drive(xSpeed, ySpeed, rot, fieldRelative);
+  }
   /**
    * Sets the wheels into an X formation to prevent movement.
    */

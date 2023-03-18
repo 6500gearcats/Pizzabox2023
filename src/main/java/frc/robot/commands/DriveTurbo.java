@@ -12,6 +12,6 @@ public class DriveTurbo extends InstantCommand {
 
     @Override
     public void initialize() {
-        m_DriveSubsystem.turboEnable = true;
+        m_DriveSubsystem.m_turboEnable = true;
     }
 }

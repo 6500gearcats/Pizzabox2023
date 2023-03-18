@@ -12,6 +12,6 @@ public class DriveNormal extends InstantCommand {
 
     @Override
     public void initialize() {
-        m_DriveSubsystem.turboEnable = false;
+        m_DriveSubsystem.m_turboEnable = false;
     }
 }
