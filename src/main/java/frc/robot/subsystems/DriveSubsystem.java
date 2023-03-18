@@ -323,7 +323,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /* Return the NavX yaw angle */
   public double getAngle() {
-    return m_gyro.getYaw();
+    return -m_gyro.getYaw();
   }
 
 
