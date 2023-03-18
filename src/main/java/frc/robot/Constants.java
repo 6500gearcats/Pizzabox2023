@@ -144,5 +144,8 @@ public final class Constants {
     public static final double kYVariability = 0;
     public static final double kOmegaVariability = 0;
     public static final String kCamName = "top cam";
+    public static final double kCamFrontDistance = 0; //needs changing
+    public static final double kCamHeight = 0; //needs changing
+    public static final double kTagHeight = 0; //needs changing
   }
 }

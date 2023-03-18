@@ -42,7 +42,6 @@ public class AlignToTagInFront extends CommandBase {
         new Rotation3d(0, 0.0, Math.PI));
 
     //private instance variables
-    //private final PhotonCamera photonCamera = new PhotonCamera(VisionConstants.cameraName);
     private final PhotonCamera camera = new PhotonCamera(VisionConstants.kCamName);
     private final DriveSubsystem driveSubsystem;
     private final Supplier<Pose2d> poseProvider;

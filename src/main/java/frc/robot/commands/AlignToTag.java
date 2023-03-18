@@ -36,9 +36,7 @@ public class AlignToTag extends CommandBase {
     private static int alignTag = VisionConstants.kAlignTag;
 
     //where we want to be in relation to the tag
-    private static final Transform3d PositionToTag = new Transform3d(
-        new Translation3d(VisionConstants.kInFrontTagDistance, VisionConstants.kSideToSideTagDistance, 0),
-        new Rotation3d(0, 0.0, Math.PI));
+    private static Transform3d PositionToTag;
 
     //private instance variables
     //private final PhotonCamera photonCamera = new PhotonCamera(VisionConstants.cameraName);
@@ -55,11 +53,12 @@ public class AlignToTag extends CommandBase {
     private PhotonTrackedTarget lastTarget;
 
     //Constructor
-    //public AlignToTag(PhotonCamera cam, DriveSubsystem drive, Supplier<Pose2d> pose) {
-    //    camera = cam;
-    public AlignToTag(DriveSubsystem drive, Supplier<Pose2d> pose) {
+    public AlignToTag(DriveSubsystem drive, double tagFrontDistance, double tagSideDistance, Supplier<Pose2d> pose) {
         driveSubsystem = drive;
         poseProvider = pose;
+        PositionToTag = new Transform3d(
+            new Translation3d(tagFrontDistance, tagSideDistance, 0),
+            new Rotation3d(0, 0.0, Math.PI));
 
         xController.setTolerance(VisionConstants.kXVariability);
         yController.setTolerance(VisionConstants.kYVariability);
@@ -108,7 +107,9 @@ public class AlignToTag extends CommandBase {
             lastTarget = target;
 
             //figure out where the camera is
-            Pose3d cameraPose = robotPose.transformBy(new Transform3d());
+            Pose3d cameraPose = robotPose.transformBy(new Transform3d(
+                new Translation3d(VisionConstants.kCamFrontDistance, 0, VisionConstants.kCamHeight), 
+                new Rotation3d()));
 
             //figure out where the target is
             Transform3d camToTarget = target.getBestCameraToTarget();
@@ -141,7 +142,7 @@ public class AlignToTag extends CommandBase {
             }
 
             //driveSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, omegaSpeed, robotPose2d.getRotation()));
-            driveSubsystem.drive(xSpeed, ySpeed, omegaSpeed, false);
+            driveSubsystem.drive(xSpeed, ySpeed, omegaSpeed, true);
         }
     }
 
