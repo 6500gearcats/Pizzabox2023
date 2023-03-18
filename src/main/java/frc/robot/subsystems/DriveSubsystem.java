@@ -90,6 +90,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
     }
 
+    m_gyro.setAngleAdjustment(180.0);
+    m_gyro.zeroYaw();
+
     if (RobotBase.isSimulation()) {
       m_gyroSim  = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
       m_simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Yaw"));
@@ -148,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
-  /**
+  /** 
    * Returns the currently-estimated pose of the robot.
    *
    * @return The pose.
@@ -323,7 +326,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   /* Return the NavX yaw angle */
   public double getAngle() {
-    return -m_gyro.getYaw();
+    //return -m_gyro.getYaw();
+    return -m_gyro.getAngle();
   }
 
 
