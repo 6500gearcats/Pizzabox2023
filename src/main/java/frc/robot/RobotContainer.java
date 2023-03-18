@@ -122,12 +122,14 @@ public class RobotContainer {
   
     //sets left stick to arm up or down at constant speed
     new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.5));
-    new RunCommand(
-            () -> m_Arm.armUpSpeed(m_driverController.getLeftTriggerAxis()),
-            m_robotDrive));
+    //new RunCommand(
+    //        () -> (m_driverController.getLeftTriggerAxis() > 0.5 ?
+    //        m_Arm.armUpSpeed(m_driverController.getLeftTriggerAxis()) :
+    //        m_Arm.armUpSpeed(m_driverController.getLeftTriggerAxis()),
+    //        m_Arm);
     new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.5));
 
-    //sets the right stick to move claw up, at a constand speed
+    //sets the right stick to move claw up at a constand speed
     new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, -0.2));
     //sets the right stick to move claw down, at a constant speed
     new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDownWithSpeed(m_Claw, 0.2));
