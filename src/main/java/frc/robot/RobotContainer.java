@@ -104,30 +104,18 @@ public class RobotContainer {
 
 
     //GUNNER CONTROLLER
-    //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
-    //new Trigger(() -> m_gunnerController.getLeftY() > 0).whileTrue(new ArmUpWithSpeed(m_Arm, (ArmConstants.kArmForwardMaxSpeed * m_gunnerController.getLeftY())));
-    //sets the left stick to move arm down, increasing in speed with how far the joystick is pushed
-    //new Trigger(() -> m_gunnerController.getLeftY() < 0).whileTrue(new ArmDownWithSpeed(m_Arm, (ArmConstants.kArmReverseMaxSpeed * m_gunnerController.getLeftY())));
-
-    //Makes the arm move slow when the left bumper is pressed
-    new Trigger(() -> (m_gunnerController.getLeftTriggerAxis() > 0.5))
-      .onTrue(new ArmSlow(m_Arm));
-    new Trigger(() -> (m_gunnerController.getLeftTriggerAxis() > 0.5))
-      .onFalse(new ArmNormal(m_Arm));
-    //Makes the claw move slaw when the right bumper is pressed
-    new Trigger(() -> (m_gunnerController.getRightTriggerAxis() > 0.5))
-      .onTrue(new ClawSlow(m_Claw));
-    new Trigger(() -> (m_gunnerController.getRightTriggerAxis() > 0.5))
-      .onFalse(new ClawNormal(m_Claw));
-  
     //sets left stick to arm up or down at constant speed
-    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.5));
-    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.5));
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, 
+      () -> m_gunnerController.getLeftTriggerAxis() > 0.5));
+    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm,
+      () -> m_gunnerController.getLeftTriggerAxis() > 0.5));
 
     //sets the right stick to move claw up, at a constand speed
-    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, -0.2));
+    new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, 
+      () -> m_gunnerController.getRightTriggerAxis() > 0.5));
     //sets the right stick to move claw down, at a constant speed
-    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDownWithSpeed(m_Claw, 0.2));
+    new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDownWithSpeed(m_Claw,
+      () -> m_gunnerController.getRightTriggerAxis() > 0.5));
     //sets claw open to right button and claw close to left button
     new JoystickButton(m_gunnerController, Button.kRightBumper.value).onTrue(new CloseClaw(m_Claw));
     new JoystickButton(m_gunnerController, Button.kLeftBumper.value).onTrue(new OpenClaw(m_Claw));
