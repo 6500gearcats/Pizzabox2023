@@ -130,6 +130,10 @@ public class Arm extends SubsystemBase {
     public void stopArm() {
         // Stop the arm motor moving.
         m_tiltMotor.stopMotor();
+        if(ArmPosition > ArmConstants.kArmStowAngle){
+          armUpSpeed(0.05);
+        }
+
       }
 
     public void resetFilter() {
