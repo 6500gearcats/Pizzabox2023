@@ -159,10 +159,10 @@ public final class Constants {
     public static final double kEncoderUpperThreshold = 0.30;
     public static final double kArmStowAngle = 0.8;
     public static final double kArmFloorAngle = 0;
-    public static final double kArmHighAngle = 0.315; //good
-    public static final double kArmMidAngle = 0.37; //good
+    public static final double kArmHighAngle = 0.29; //good
+    public static final double kArmMidAngle = 0.35; //good
     public static final double kArmLowAngle = 0.70;
-    public static final double kLoadingStation = 0.36;
+    public static final double kLoadingStation = 0.345;
   }
 
   public static final class ClawConstants {
