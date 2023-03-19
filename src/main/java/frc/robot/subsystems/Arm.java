@@ -40,12 +40,13 @@ public class Arm extends SubsystemBase {
 
     private double ArmPosition;
     private boolean lowerLimit;
+    private boolean maintainHeight;
 
     public Arm() {
       if (RobotBase.isSimulation()) {
         REVPhysicsSim.getInstance().addSparkMax(m_CanSparkMaxArm, DCMotor.getNEO(1));
       }
-      
+      maintainHeight = false;
       //m_tiltArmEncoder.reset();
 
     }
@@ -130,6 +131,9 @@ public class Arm extends SubsystemBase {
     public void stopArm() {
         // Stop the arm motor moving.
         m_tiltMotor.stopMotor();
+        if(ArmPosition > ArmConstants.kArmStowAngle){
+          armUpSpeed(0.01);
+        }
       }
 
     public void resetFilter() {
@@ -138,5 +142,9 @@ public class Arm extends SubsystemBase {
 
     public boolean armAtTarget(double targetAngle) {
       return Math.abs(getArmAngle() - targetAngle) < 0.01;
+    }
+
+    public void setMaintatinHeight(boolean set){
+      maintainHeight = set;
     }
 }
