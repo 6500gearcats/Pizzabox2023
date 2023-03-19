@@ -163,7 +163,7 @@ public class RobotContainer {
 
     ArrayList<PathPlannerTrajectory> pathGroup1 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path Start 1", new PathConstraints(4, 3));
     ArrayList<PathPlannerTrajectory> pathGroup2 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path Start 2", new PathConstraints(4, 3));
-    ArrayList<PathPlannerTrajectory> pathGroup3 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path Start 3", new PathConstraints(4, 3));
+    ArrayList<PathPlannerTrajectory> pathGroup3 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path End 3", new PathConstraints(4, 3));
     ArrayList<PathPlannerTrajectory> pathGroup4 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Path End 1", new PathConstraints(4, 3));
     ArrayList<PathPlannerTrajectory> pathGroup5 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 1_1", new PathConstraints(4, 3));
     ArrayList<PathPlannerTrajectory> pathGroup6 = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Cube Place 1_2", new PathConstraints(4, 3));
@@ -196,7 +196,7 @@ public class RobotContainer {
 
     // Command pathStart1 = autoBuilder.fullAuto(pathGroup1);
     // Command pathStart2 = autoBuilder.fullAuto(pathGroup2);
-    // Command pathStart3 = autoBuilder.fullAuto(pathGroup3);
+    Command pathEnd3 = autoBuilder.fullAuto(pathGroup3);
     Command pathEnd1 = autoBuilder.fullAuto(pathGroup4);
     Command cubePath1_1 = autoBuilder.fullAuto(pathGroup5);
     Command cubePath1_2 = autoBuilder.fullAuto(pathGroup6);
@@ -210,50 +210,50 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     //return fullAuto.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
-    if (DriverStation.getLocation() == 1)
-    {
-      System.out.println("Starting Path 1");
-      return new CloseClaw(m_Claw).withTimeout(0.5)
-      .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm)).withTimeout(5.0)
-      .andThen(cubePath1_1
-      .andThen(new OpenClaw(m_Claw).withTimeout(0.5))      
-      .andThen(cubePath1_2
-      .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
-      .andThen(cubePath1_3
-      .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))));
-    }
-    else if (DriverStation.getLocation() == 2)
-    {
-      System.out.println("Starting Path 2");
-      return new CloseClaw(m_Claw).withTimeout(0.5)
-      .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm)).withTimeout(5.0)
-      .andThen(cubePath2_1
-      .andThen(new OpenClaw(m_Claw).withTimeout(0.5))      
-      .andThen(cubePath2_2
-      .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
-      .andThen(cubePath2_3
-      .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive)
-      .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))))));
-    }
-    else if (DriverStation.getLocation() == 3)
-    {
-      System.out.println("Starting Path 3");
-      return new CloseClaw(m_Claw).withTimeout(0.5)
-      .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm)).withTimeout(5.0)
-      .andThen(cubePath3_1
-      .andThen(new OpenClaw(m_Claw).withTimeout(0.5))      
-      .andThen(cubePath3_2
-      .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
-      .andThen(cubePath3_3
-      .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))));
-    }
-    else
-    {
-      return new WaitCommand(0);
+    switch (DriverStation.getLocation()) {
+      case 1:
+      {
+        System.out.println("Starting Path 1");
+        return new CloseClaw(m_Claw).withTimeout(0.5)
+        .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm).withTimeout(5.0)
+        .andThen(cubePath1_1)
+        .andThen(new OpenClaw(m_Claw).withTimeout(0.5))
+        .andThen(cubePath1_2)
+        .andThen(new StowArm(m_Arm, m_Claw)).withTimeout(5.0))
+        .andThen(cubePath1_3)
+        .andThen(pathEnd1)
+        .andThen(()-> m_robotDrive.drive(0, 0, 0, false));       
+      }
+      case 2:
+      {
+        System.out.println("Starting Path 2");
+        return new CloseClaw(m_Claw).withTimeout(0.5)
+        .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm)).withTimeout(5.0)
+        .andThen(cubePath2_1)
+        .andThen(new OpenClaw(m_Claw).withTimeout(0.5))      
+        .andThen(cubePath2_2)
+        .andThen(new StowArm(m_Arm, m_Claw).withTimeout(5.0))
+        .andThen(cubePath2_3)
+        .andThen(new ClimbPlatform(m_robotDrive))
+        .andThen(()-> m_robotDrive.drive(0, 0, 0, false));
+      }
+      case 3:
+      {
+        System.out.println("Starting Path 3");
+        return new CloseClaw(m_Claw).withTimeout(0.5)
+        .andThen(new MoveArmToPosition(ArmConstants.kArmHighAngle, m_Arm)).withTimeout(5.0)
+        .andThen(cubePath3_1)
+        .andThen(new OpenClaw(m_Claw).withTimeout(0.5))
+        .andThen(cubePath3_2)
+        .andThen(new StowArm(m_Arm, m_Claw).withTimeout(5.0))
+        .andThen(cubePath3_3)
+        .andThen(pathEnd3)
+        .andThen(()-> m_robotDrive.drive(0, 0, 0, false));
+      }
+      default:
+      {
+        return new WaitCommand(0);
+      }
     }
   }
 }

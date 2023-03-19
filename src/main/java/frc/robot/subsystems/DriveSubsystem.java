@@ -73,6 +73,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   private Pose2d m_simOdometryPose;
 
+  private final Pose2d startPositions[] = {
+    new Pose2d(2.83, 4.70, new Rotation2d()), 
+    new Pose2d(2.45, 2.75, new Rotation2d()),  
+    new Pose2d(2.99, 1.05, new Rotation2d())
+  };
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
 
@@ -103,6 +109,7 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber(getName(), getPitch());
     }
 
+       
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(getAngle()),
@@ -111,7 +118,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
-        }, new Pose2d(2.0, 5.0, new Rotation2d()));
+        }, startPositions[DriverStation.getLocation()-1]);
 
         m_lastSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.0,0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
