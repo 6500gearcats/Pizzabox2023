@@ -242,14 +242,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_fieldOriented = fieldRelative;
     // Adjust input based on max speed
-    xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
-    ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
     
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
     xSpeed = Math.signum(xSpeed)*Math.abs(Math.pow(xSpeed,4));
     ySpeed = Math.signum(ySpeed)*Math.abs(Math.pow(ySpeed,4));
-    
+
+    xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+    ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+
     if(turboEnable)
     {
       xSpeed *= DriveConstants.kTurboModeModifier;
