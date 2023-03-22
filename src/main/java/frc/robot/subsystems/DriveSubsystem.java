@@ -248,8 +248,8 @@ public class DriveSubsystem extends SubsystemBase {
     xSpeed = Math.signum(xSpeed)*Math.abs(Math.pow(xSpeed,2));
     ySpeed = Math.signum(ySpeed)*Math.abs(Math.pow(ySpeed,2));
 
-    // xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
-    // ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+    xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+    ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
 
     if(turboEnable)
     {
