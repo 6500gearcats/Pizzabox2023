@@ -36,7 +36,7 @@ public class Arm extends SubsystemBase {
     //private boolean m_isArmStored = false;
     //private boolean m_isArmCapped = false;
 
-    private final SlewRateLimiter armFilter = new SlewRateLimiter(0.6);
+    private final SlewRateLimiter armFilter = new SlewRateLimiter(0.3);
 
     private double ArmPosition;
     private boolean lowerLimit;

@@ -22,8 +22,8 @@ public class StowArm extends CommandBase {
 
         if(m_ClawSystem.getClawAngle() > ClawConstants.kClawStowAngle)
             m_ClawSystem.clawDown();
-        else
-            m_ClawSystem.clawUp();
+        // else
+        //     m_ClawSystem.clawUp();
     }
 
     @Override

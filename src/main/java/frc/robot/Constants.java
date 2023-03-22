@@ -146,8 +146,8 @@ public final class Constants {
     // These are port values (where it's located on the robot)
     public static final int kArmMotorPort = 10;  
     // These are speed values
-    public static final double kArmReverseSpeed = 0.6;
-    public static final double kArmForwardSpeed = -0.7;
+    public static final double kArmReverseSpeed = 0.9;
+    public static final double kArmForwardSpeed = -0.9;
     public static final double kArmForwardMaxSpeed = 0.9;
     public static final double kArmReverseMaxSpeed = -0.9;
 
