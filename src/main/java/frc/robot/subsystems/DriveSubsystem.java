@@ -239,10 +239,13 @@ public class DriveSubsystem extends SubsystemBase {
    */
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-
     m_fieldOriented = fieldRelative;
-    // Adjust input based on max speed
     
+    //put out speed to dashboard
+    SmartDashboard.putNumber("xSpeed", xSpeed);
+    SmartDashboard.putNumber("ySpeed", ySpeed);
+
+    // Adjust input based on max speed
     rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
     xSpeed = Math.signum(xSpeed)*Math.abs(Math.pow(xSpeed,2));
