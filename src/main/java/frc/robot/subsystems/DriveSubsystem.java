@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.LayoutStyle;
+
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.REVPhysicsSim;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
@@ -59,7 +62,9 @@ public class DriveSubsystem extends SubsystemBase {
   private SimDouble m_simAngle;
   private SimBoolean m_connected;
   private SimBoolean m_calibrating;
+  private boolean m_fieldOriented;
 
+  private ChassisSpeeds m_lastSpeeds;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
@@ -85,6 +90,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
     }
 
+    m_gyro.setAngleAdjustment(180.0);
+    m_gyro.zeroYaw();
+
     if (RobotBase.isSimulation()) {
       m_gyroSim  = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
       m_simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Yaw"));
@@ -97,13 +105,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         }, new Pose2d(2.0, 5.0, new Rotation2d()));
+
+        m_lastSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0.0,0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
     m_simOdometryPose = m_odometry.getPoseMeters();
     SmartDashboard.putData("Field", m_field);
@@ -114,26 +124,34 @@ public class DriveSubsystem extends SubsystemBase {
     // Update the odometry in the periodic block
     updateOdometry();
 
-    m_field.setRobotPose(m_simOdometryPose);
+    if (Robot.isReal()) {
+      m_field.setRobotPose(m_odometry.getPoseMeters());
+    }
+    else{
+      m_field.setRobotPose(m_simOdometryPose);
+    }
 
     SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
-    SmartDashboard.putNumber("NavX Yaw angle", m_gyro.getAngle());
+    SmartDashboard.putNumber("NavX Yaw angle", getAngle());
+
+    SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
   }
 
   @Override
   public void simulationPeriodic() {
     // Update the odometry in the periodic block
+    REVPhysicsSim.getInstance().run();
 
     //angle.set(5.0);
-    double angle = getPose().getRotation().getDegrees() * -1;
-    SmartDashboard.putNumber(getName() + " angle", angle);
+    double angle = getPose().getRotation().getDegrees();
+    SmartDashboard.putNumber("SimAngle", angle);
     m_simAngle.set(angle);
 
 
   }
 
-  /**
+  /** 
    * Returns the currently-estimated pose of the robot.
    *
    * @return The pose.
@@ -153,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -172,7 +190,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void updateOdometry() {
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -185,13 +203,21 @@ public class DriveSubsystem extends SubsystemBase {
           new SwerveModuleState[] {
           m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
       };
-      ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
+      //ChassisSpeeds speeds = DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
+      ChassisSpeeds speeds = m_lastSpeeds;
+
+      Twist2d twist = new Twist2d(
+        speeds.vxMetersPerSecond * .02,
+        speeds.vyMetersPerSecond * .02,
+        speeds.omegaRadiansPerSecond * .02);
+
       m_simOdometryPose =
-          m_simOdometryPose.exp(
-          new Twist2d(
-              speeds.vxMetersPerSecond * .02,
-              speeds.vyMetersPerSecond * .02,
-              speeds.omegaRadiansPerSecond * .02));
+          m_simOdometryPose.exp(twist);
+
+      SmartDashboard.putNumber("new x", twist.dx );
+      SmartDashboard.putNumber("new y ", twist.dy );
+      SmartDashboard.putNumber("new theta ", twist.dtheta );
+
     }
   }
 
@@ -206,6 +232,8 @@ public class DriveSubsystem extends SubsystemBase {
    */
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
+    m_fieldOriented = fieldRelative;
     // Adjust input based on max speed
     xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
@@ -222,11 +250,11 @@ public class DriveSubsystem extends SubsystemBase {
       System.out.println("here" + xSpeed + ySpeed);
     }
   
-   
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
-            : new ChassisSpeeds(xSpeed, ySpeed, rot));
+    m_lastSpeeds =  (fieldRelative) ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
+                                    : new ChassisSpeeds(xSpeed, ySpeed, rot);
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_lastSpeeds);
+
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -279,7 +307,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(getAngle()).getDegrees();
   }
 
   /**
@@ -294,6 +322,18 @@ public class DriveSubsystem extends SubsystemBase {
   /* Return the NavX pitch angle */
   public double getPitch() {
     return m_gyro.getPitch();
+  }
+
+  /* Return the NavX yaw angle */
+  public double getAngle() {
+    //return -m_gyro.getYaw();
+    return -m_gyro.getAngle();
+  }
+
+
+  public boolean toggleFieldOriented() {
+    m_fieldOriented = !m_fieldOriented;
+    return m_fieldOriented;
   }
 
 }

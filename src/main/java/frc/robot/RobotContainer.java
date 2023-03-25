@@ -69,10 +69,10 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06), //0.1
-                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06), //0.1
+                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.1), //0.1
+                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.1), //0.1
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.1),
-                m_driverController.getRightBumperPressed()),
+                !m_driverController.getRightBumper()),
             m_robotDrive));
   }
 
@@ -86,10 +86,6 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
 
     //DRIVER CONTROLLER
     //while left button is pressed, speed is modified by the turbo mode modifier constant 
@@ -98,6 +94,14 @@ public class RobotContainer {
     //Turn on lights: Yellow = Back,     Purple = Start
     new JoystickButton(m_driverController, Button.kBack.value).whileTrue(new LightYellow());
     new JoystickButton(m_driverController, Button.kStart.value).whileTrue(new LightPurple());
+
+    // Use the automated Platform climb      
+    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
+
+    // Set the wheels in locked arrangement to prevent movement
+    new JoystickButton(m_driverController, Button.kX.value)
+        .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+
 
     //GUNNER CONTROLLER
     //sets the left stick to move arm up, increasing in speed with how far the joystick is pushed
@@ -117,10 +121,15 @@ public class RobotContainer {
       .onFalse(new ClawNormal(m_Claw));
   
     //sets left stick to arm up or down at constant speed
-    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.4));
-    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.4));
+    new Trigger(() -> m_gunnerController.getLeftY() < -0.05).whileTrue(new ArmUpWithSpeed(m_Arm, -0.5));
+    //new RunCommand(
+    //        () -> (m_driverController.getLeftTriggerAxis() > 0.5 ?
+    //        m_Arm.armUpSpeed(m_driverController.getLeftTriggerAxis()) :
+    //        m_Arm.armUpSpeed(m_driverController.getLeftTriggerAxis()),
+    //        m_Arm);
+    new Trigger(() -> m_gunnerController.getLeftY() >0.05).whileTrue(new ArmDownWithSpeed(m_Arm, 0.5));
 
-    //sets the right stick to move claw up, at a constand speed
+    //sets the right stick to move claw up at a constand speed
     new Trigger(() -> m_gunnerController.getRightY() > 0.05).whileTrue(new ClawUpWithSpeed(m_Claw, -0.2));
     //sets the right stick to move claw down, at a constant speed
     new Trigger(() -> m_gunnerController.getRightY() < -0.05).whileTrue(new ClawDownWithSpeed(m_Claw, 0.2));
@@ -136,15 +145,9 @@ public class RobotContainer {
     //sets score mid to b button
     new JoystickButton(m_gunnerController, Button.kB.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmMidAngle, m_Arm));
     //sets score low to a button
-    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new MoveArmToPosition(ArmConstants.kArmLowAngle, m_Arm));
+    new JoystickButton(m_gunnerController, Button.kA.value).whileTrue(new ReadyForPickUp(m_Arm, m_Claw));
     //sets stow arm to x button
     new JoystickButton(m_gunnerController, Button.kX.value).whileTrue(new StowArm(m_Arm, m_Claw));
-
-  
-    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
-
-  
-    new JoystickButton(m_driverController, Button.kA.value).onTrue(new ClimbPlatform(m_robotDrive));
 
   }
 
@@ -217,10 +220,8 @@ public class RobotContainer {
       .andThen(cubePath1_2
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath1_3
-      .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))))));
+      )))));
     }
     else if (DriverStation.getLocation() == 2)
     {
@@ -247,10 +248,8 @@ public class RobotContainer {
       .andThen(cubePath3_2
       .andThen(new MoveArmToPosition(ArmConstants.kArmStowAngle, m_Arm)).withTimeout(5.0)
       .andThen(cubePath3_3
-      .andThen(pathEnd1
-      .andThen(new ClimbPlatform(m_robotDrive)
       .andThen(()-> m_robotDrive.drive(0, 0, 0, false
-      )))))));
+      )))));
     }
     else
     {

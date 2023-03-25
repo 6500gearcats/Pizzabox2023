@@ -35,9 +35,9 @@ public final class Constants {
     public static final double kTurboModeModifier = 7.0/2.0;
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(23.0);
+    public static final double kTrackWidth = Units.inchesToMeters(28.0);
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(28.0);
+    public static final double kWheelBase = Units.inchesToMeters(23.0);
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -146,13 +146,13 @@ public final class Constants {
     // These are port values (where it's located on the robot)
     public static final int kArmMotorPort = 10;  
     // These are speed values
-    public static final double kArmReverseSpeed = 0.4;
-    public static final double kArmForwardSpeed = -0.4;
+    public static final double kArmReverseSpeed = 0.6;
+    public static final double kArmForwardSpeed = -0.7;
     public static final double kArmForwardMaxSpeed = 0.9;
     public static final double kArmReverseMaxSpeed = -0.9;
 
     // TODO tune
-    public static final double kArmSlowModifier = 2.0 / 7.0;
+    public static final double kArmSlowModifier = 0.57;
     
     //not set right
     //encoder values
@@ -162,6 +162,7 @@ public final class Constants {
     public static final double kArmHighAngle = 0.315; //good
     public static final double kArmMidAngle = 0.37; //good
     public static final double kArmLowAngle = 0.70;
+    public static final double kLoadingStation = 0.36;
   }
 
   public static final class ClawConstants {
@@ -170,17 +171,17 @@ public final class Constants {
     public static final int kOpen = 0;
     public static final int kClose = 0;
     //speeds (claw is reversed)
-    public static final double kClawReverseSpeed = 0.4;
-    public static final double kClawForwardSpeed = -0.4;
+    public static final double kClawReverseSpeed = 0.75;
+    public static final double kClawForwardSpeed = -0.75;
     public static final double kClawForwardMaxSpeed = -0.9;
     public static final double kClawReverseMaxSpeed = 0.9;
 
     // TODO tune
-    public static final double kSlowClawModifier = 2.0 / 7.0;
+    public static final double kSlowClawModifier = 0.5;
 
     //not set right
     //encoder values
-    public static final double kClawStowAngle = 0.5; //good
+    public static final double kClawStowAngle = 0.49; //good
     public static final double kClawFloorAngle = 0;
     public static final double kClawHighAngle = 0.67;
     public static final double kClawMidAngle = 0.67; //probably same as high
@@ -192,6 +193,10 @@ public final class Constants {
 
   public static final class GyroConstants{
     public static final double kTiltPitch = 65; //11? tilt angle=
-    public static final double kPlatformLevel = 10;
+    public static final double kPlatformLevel = 7;
+  }
+
+  public static final class PlatformConstants {
+    public static final double kPlatformSpeed = 0.4;
   }
 }

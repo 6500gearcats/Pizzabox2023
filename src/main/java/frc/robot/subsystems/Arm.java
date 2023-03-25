@@ -86,7 +86,11 @@ public class Arm extends SubsystemBase {
     public void armDown() {
         if ( LimitSwitchPressed() ) {
             m_tiltMotor.set(0);
-        } else {
+        }
+        else if (m_tiltArmEncoder.get() >= 0.75){
+          m_tiltMotor.set(ArmConstants.kArmReverseSpeed*ArmConstants.kArmSlowModifier);
+        }
+        else {
             m_tiltMotor.set(ArmConstants.kArmReverseSpeed);
         }
     }
