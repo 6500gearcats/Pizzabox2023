@@ -146,8 +146,8 @@ public final class Constants {
     // These are port values (where it's located on the robot)
     public static final int kArmMotorPort = 10;  
     // These are speed values
-    public static final double kArmReverseSpeed = 0.9;
-    public static final double kArmForwardSpeed = -0.9;
+    public static final double kArmReverseSpeed = 1.2;
+    public static final double kArmForwardSpeed = -1.2;
     public static final double kArmForwardMaxSpeed = 0.9;
     public static final double kArmReverseMaxSpeed = -0.9;
 
@@ -171,8 +171,8 @@ public final class Constants {
     public static final int kOpen = 0;
     public static final int kClose = 0;
     //speeds (claw is reversed)
-    public static final double kClawReverseSpeed = 0.75;
-    public static final double kClawForwardSpeed = -0.75;
+    public static final double kClawReverseSpeed = 0.95;
+    public static final double kClawForwardSpeed = -0.95;
     public static final double kClawForwardMaxSpeed = -0.9;
     public static final double kClawReverseMaxSpeed = 0.9;
 
